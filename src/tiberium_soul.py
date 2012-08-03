@@ -39,6 +39,9 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import os
 import flask
+import base64
+
+import tiberium
 
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 CURRENT_DIRECTORY_ABS = os.path.abspath(CURRENT_DIRECTORY)
@@ -66,9 +69,8 @@ def about():
 
 @app.route("/deploy", methods = ("POST",))
 def deploy():
-    # faz deploy de um novo sun invalidando
-    # todo os anteriores nos varios nos
-    pass
+    file = flask.request.form["file"]
+    file = base64.b64decode(file)
 
 @app.route("/handle", methods = ("GET", "POST",))
 def handle():
