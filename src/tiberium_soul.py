@@ -45,12 +45,10 @@ import tiberium
 
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 CURRENT_DIRECTORY_ABS = os.path.abspath(CURRENT_DIRECTORY)
-SETS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "sets")
-PROBLEMS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "problems")
-PERSONS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "persons")
-TIMETABLES_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "timetables")
+SUNS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "suns")
 
 app = flask.Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = 1024 ** 3
 
 @app.route("/", methods = ("GET",))
 @app.route("/index", methods = ("GET",))
@@ -69,8 +67,15 @@ def about():
 
 @app.route("/deploy", methods = ("POST",))
 def deploy():
-    file = flask.request.form["file"]
-    file = base64.b64decode(file)
+    name = flask.request.form["name"]
+    contents = flask.request.form["file"]
+    contents = base64.b64decode(contents)
+    file_path = os.path.join(SUNS_FOLDER, "%s.sun" % name)
+    file = open(file_path, "wb")
+    try: file.write(contents)
+    finally: file.close()
+    tiberium.execute_sun(file_path)
+    return "success"
 
 @app.route("/handle", methods = ("GET", "POST",))
 def handle():
@@ -78,6 +83,18 @@ def handle():
     # de http recebido, deve começar novas
     # instancias caso sejam necessarias
     pass
+
+@app.errorhandler(404)
+def handler_404(error):
+    return str(error)
+
+@app.errorhandler(413)
+def handler_413(error):
+    return str(error)
+
+@app.errorhandler(BaseException)
+def handler_exception(error):
+    return str(error)
 
 def run():
     # sets the debug control in the application
