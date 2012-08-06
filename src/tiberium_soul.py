@@ -47,15 +47,21 @@ import tiberium
 
 import execution
 
+CURRENT = {}
+""" The base of the map that will hold the various state
+related configuration for the execution of the tiberium
+soul runtime processes """
+
+PORTS = [port for port in range(5001, 5100)]
+""" The list containing the tcp ports that are currently
+available for the working of the soul instance """
+
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 CURRENT_DIRECTORY_ABS = os.path.abspath(CURRENT_DIRECTORY)
 SUNS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "suns")
 
 app = flask.Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 1024 ** 3
-
-CURRENT = {
-}
 
 @app.route("/", methods = ("GET",))
 @app.route("/index", methods = ("GET",))
@@ -88,10 +94,22 @@ def deploy():
 
 @app.route("/handle", methods = ("GET", "POST",))
 def handle():
-    # faz handle de um determinado request
-    # de http recebido, deve começar novas
-    # instancias caso sejam necessarias
+    name = flask.request.args.get("name", None)
+    url = flask.request.args.get("url", None)
+    
+    if not name: return "error"
+    if not url: return "error"
+    
+    current = CURRENT.get(name, None)
+    
+    if not current: return "error"
+    
+    _process, _temp_path, port = current
+    
+    
+    
     pass
+    
 
 @app.errorhandler(404)
 def handler_404(error):
@@ -108,19 +126,30 @@ def handler_exception(error):
 def _get_execute_sun(name, file_path):
     def execute_sun():
         if name in CURRENT:
-            process, temp_path = CURRENT[name]
+            process, temp_path, port = CURRENT[name]
             try:
                 process.kill()
                 process.wait()
                 shutil.rmtree(temp_path)
+                PORTS.append(port)
             except: pass
+
+        # retrieves the next available port from the list
+        # of currently available ports
+        port = PORTS.pop()
+
+        # creates the map of (extra) environment variables
+        # to be used for the execution of the sun file
+        env = {
+            "PORT" : str(port)
+        }
 
         # executes the sun file and retrieves the tuple
         # object describing the "just" created process
         # for the sun file execution, this value will be
         # saved in the current map for future process actions
-        process_t = tiberium.execute_sun(file_path, sync = False)
-        CURRENT[name] = process_t
+        process, temp_path = tiberium.execute_sun(file_path, env = env, sync = False)
+        CURRENT[name] = (process, temp_path, port)
 
     return execute_sun
 
