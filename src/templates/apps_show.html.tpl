@@ -17,7 +17,7 @@
                 <td class="left value" width="50%">
                     <a href="#">{{ app.git }}</a>
                 </td>
-			</tr>
+            </tr>
         </tbody>
     </table>
 {% endblock %}

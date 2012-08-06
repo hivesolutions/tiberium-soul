@@ -112,7 +112,7 @@ suns_data_files = find_data_files("src/suns", "suns", ["README.md"])
 hooks_data_files = find_data_files("src/hooks", "hooks", ["*"])
 static_data_files = find_data_files("src/static", "static", ["css/*", "images/*", "js/*", "libs/*"])
 templates_data_files = find_data_files("src/templates", "templates", ["*", "partials/*"])
-data_files = base_data_files + apps_data_files + repos_data_files + suns_data_files + hooks_data_files + static_data_files + templates_data_files 
+data_files = base_data_files + apps_data_files + repos_data_files + suns_data_files + hooks_data_files + static_data_files + templates_data_files
 
 # retrieves the current root directory (from the
 # currently executing file) and in case its not

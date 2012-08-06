@@ -128,6 +128,20 @@ def new_app():
 @app.route("/apps", methods = ("POST",))
 def create_app():
     name = flask.request.form.get("name", None)
+    description = flask.request.form.get("description", None)
+
+    app = {
+        "id" : name,
+        "name" : name,
+        "description" : description,
+        "domain" : "%s.tibapp" % name,
+        "git" : "git@tiberium:%s.git" % name
+    }
+
+    app_path = os.path.join(APPS_FOLDER, "%s.json" % name)
+    app_file = open(app_path, "wb")
+    try: json.dump(app, app_file)
+    finally: app_file.close()
 
     repo_path = os.path.join(REPOS_FOLDER, name)
     tiberium.create_repo(repo_path)
@@ -135,10 +149,14 @@ def create_app():
     hooks_path = os.path.join(repo_path, ".git", "hooks")
 
     names = os.listdir(HOOKS_FOLDER)
-    for name in names:
-        file_path = os.path.join(HOOKS_FOLDER, name)
-        target_path = os.path.join(hooks_path, name)
+    for _name in names:
+        file_path = os.path.join(HOOKS_FOLDER, _name)
+        target_path = os.path.join(hooks_path, _name)
         shutil.copy(file_path, target_path)
+
+    return flask.redirect(
+        flask.url_for("show_app", id = name)
+    )
 
 @app.errorhandler(404)
 def handler_404(error):
