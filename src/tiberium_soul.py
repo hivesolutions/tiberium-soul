@@ -39,7 +39,6 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import os
 import flask
-import base64
 
 import tiberium
 
@@ -68,8 +67,8 @@ def about():
 @app.route("/deploy", methods = ("POST",))
 def deploy():
     name = flask.request.form["name"]
-    contents = flask.request.form["file"]
-    contents = base64.b64decode(contents)
+    file = flask.request.files['file']
+    contents = file.read()
     file_path = os.path.join(SUNS_FOLDER, "%s.sun" % name)
     file = open(file_path, "wb")
     try: file.write(contents)
