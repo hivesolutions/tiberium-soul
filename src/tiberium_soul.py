@@ -97,19 +97,6 @@ def deploy():
     execution_thread.insert_work(current_time, execute_sun)
     return "success"
 
-@app.route("/create", methods = ("GET",))
-def create():
-    repo_path = os.path.join(REPOS_FOLDER, "tiberium")
-    tiberium.create_repo(repo_path)
-
-    hooks_path = os.path.join(repo_path, ".git", "hooks")
-
-    names = os.listdir(HOOKS_FOLDER)
-    for name in names:
-        file_path = os.path.join(HOOKS_FOLDER, name)
-        target_path = os.path.join(hooks_path, name)
-        shutil.copy(file_path, target_path)
-
 @app.route("/apps", methods = ("GET",))
 def list_app():
     apps = get_apps()
@@ -129,6 +116,29 @@ def show_app(id):
         sub_link = "info",
         app = app
     )
+
+
+@app.route("/apps/new", methods = ("GET",))
+def new_app():
+    return flask.render_template(
+        "app_new.html.tpl",
+        link = "new_app"
+    )
+
+@app.route("/apps", methods = ("POST",))
+def create_app():
+    name = flask.request.form.get("name", None)
+
+    repo_path = os.path.join(REPOS_FOLDER, name)
+    tiberium.create_repo(repo_path)
+
+    hooks_path = os.path.join(repo_path, ".git", "hooks")
+
+    names = os.listdir(HOOKS_FOLDER)
+    for name in names:
+        file_path = os.path.join(HOOKS_FOLDER, name)
+        target_path = os.path.join(hooks_path, name)
+        shutil.copy(file_path, target_path)
 
 @app.errorhandler(404)
 def handler_404(error):

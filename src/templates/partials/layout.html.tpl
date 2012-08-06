@@ -23,6 +23,12 @@
                     <a href="{{ url_for('list_app') }}">apps</a>
                 {% endif %}
                 //
+                {% if link == "new_app" %}
+                    <a href="{{ url_for('new_app') }}" class="active">new app</a>
+                {% else %}
+                    <a href="{{ url_for('new_app') }}">new app</a>
+                {% endif %}
+                //
                 {% if link == "about" %}
                     <a href="{{ url_for('about') }}" class="active">about</a>
                 {% else %}
