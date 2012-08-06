@@ -38,6 +38,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import os
+import json
 import time
 import flask
 import atexit
@@ -62,6 +63,7 @@ CURRENT_DIRECTORY_ABS = os.path.abspath(CURRENT_DIRECTORY)
 SUNS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "suns")
 REPOS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "repos")
 HOOKS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "hooks")
+APPS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "apps")
 
 app = flask.Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 1024 ** 3
@@ -108,6 +110,26 @@ def create():
         target_path = os.path.join(hooks_path, name)
         shutil.copy(file_path, target_path)
 
+@app.route("/apps", methods = ("GET",))
+def list_app():
+    apps = get_apps()
+
+    return flask.render_template(
+        "apps_list.html.tpl",
+        link = "apps",
+        apps = apps
+    )
+
+@app.route("/apps/<id>", methods = ("GET",))
+def show_app(id):
+    app = get_app(id)
+    return flask.render_template(
+        "apps_show.html.tpl",
+        link = "apps",
+        sub_link = "info",
+        app = app
+    )
+
 @app.errorhandler(404)
 def handler_404(error):
     return str(error)
@@ -118,7 +140,42 @@ def handler_413(error):
 
 @app.errorhandler(BaseException)
 def handler_exception(error):
+    import traceback
+    import sys
+    print "Exception in user code:"
+    print '-' * 60
+    traceback.print_exc(file=sys.stdout)
+    print '-' * 60
     return str(error)
+
+def get_apps():
+    apps_directory = os.path.join(APPS_FOLDER)
+    if not os.path.exists(apps_directory): raise RuntimeError("Apps directory does not exist")
+    entries = os.listdir(apps_directory)
+    entries.sort()
+
+    apps = []
+
+    for entry in entries:
+        base, extension = os.path.splitext(entry)
+        if not extension == ".json": continue
+
+        app = get_app(base)
+        apps.append(app)
+
+    return apps
+
+def get_app(id):
+    # retrieves the path to the (target) app (configuration) file and
+    # check if it exists then opens it and loads the json configuration
+    # contained in it to app it in the template
+    app_path = os.path.join(APPS_FOLDER, "%s.json" % id)
+    if not os.path.exists(app_path): raise RuntimeError("app file does not exist")
+    app_file = open(app_path, "rb")
+    try: app = json.load(app_file)
+    finally: app_file.close()
+
+    return app
 
 def _get_execute_sun(name, file_path):
     def execute_sun():

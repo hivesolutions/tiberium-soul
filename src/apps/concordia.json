@@ -1,0 +1,7 @@
+{
+    "id" : "concordia",
+    "name" : "concordia",
+    "description" : "The most powerfull scheduling generator",
+    "domain" : "concordia.tibapp",
+    "schema" : "http"
+}

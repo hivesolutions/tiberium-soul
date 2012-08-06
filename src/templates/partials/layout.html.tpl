@@ -17,6 +17,12 @@
                     <a href="{{ url_for('index') }}">home</a>
                 {% endif %}
                 //
+                {% if link == "apps" %}
+                    <a href="{{ url_for('list_app') }}" class="active">apps</a>
+                {% else %}
+                    <a href="{{ url_for('list_app') }}">apps</a>
+                {% endif %}
+                //
                 {% if link == "about" %}
                     <a href="{{ url_for('about') }}" class="active">about</a>
                 {% else %}
