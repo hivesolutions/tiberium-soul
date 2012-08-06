@@ -45,6 +45,7 @@ import shutil
 
 import tiberium
 
+import proxy
 import execution
 
 CURRENT = {}
@@ -91,25 +92,6 @@ def deploy():
     execute_sun = _get_execute_sun(name, file_path)
     execution_thread.insert_work(current_time, execute_sun)
     return "success"
-
-@app.route("/handle", methods = ("GET", "POST",))
-def handle():
-    name = flask.request.args.get("name", None)
-    url = flask.request.args.get("url", None)
-    
-    if not name: return "error"
-    if not url: return "error"
-    
-    current = CURRENT.get(name, None)
-    
-    if not current: return "error"
-    
-    _process, _temp_path, port = current
-    
-    
-    
-    pass
-    
 
 @app.errorhandler(404)
 def handler_404(error):
@@ -190,6 +172,12 @@ def stop_thread():
     # stop the execution thread so that it's possible to
     # the process to return the calling
     execution_thread.stop()
+
+# creates the proxy server with the reference to
+# the current state map to be used for the proxy
+# routing rules
+server = proxy.ProxyServer(CURRENT)
+server.start()
 
 # creates the thread that it's going to be used to
 # execute the various background tasks and starts

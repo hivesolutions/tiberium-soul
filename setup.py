@@ -129,7 +129,8 @@ setuptools.setup(
     zip_safe = False,
     py_modules = [
         "tiberium_soul",
-        "execution"
+        "execution",
+        "proxy"
     ],
     package_dir = {
         "" : os.path.normpath("src")
