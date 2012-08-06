@@ -1,1 +1,3 @@
+include src/repos/README.md
 include src/suns/README.md
+recursive-include src/hooks *
