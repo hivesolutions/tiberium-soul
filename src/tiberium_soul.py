@@ -60,6 +60,8 @@ available for the working of the soul instance """
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 CURRENT_DIRECTORY_ABS = os.path.abspath(CURRENT_DIRECTORY)
 SUNS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "suns")
+REPOS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "repos")
+HOOKS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "hooks")
 
 app = flask.Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 1024 ** 3
@@ -92,6 +94,19 @@ def deploy():
     execute_sun = _get_execute_sun(name, file_path)
     execution_thread.insert_work(current_time, execute_sun)
     return "success"
+
+@app.route("/create", methods = ("GET",))
+def create():
+    repo_path = os.path.join(REPOS_FOLDER, "tiberium")
+    tiberium.create_repo(repo_path)
+
+    hooks_path = os.path.join(repo_path, ".git", "hooks")
+
+    names = os.listdir(HOOKS_FOLDER)
+    for name in names:
+        file_path = os.path.join(HOOKS_FOLDER, name)
+        target_path = os.path.join(hooks_path, name)
+        shutil.copy(file_path, target_path)
 
 @app.errorhandler(404)
 def handler_404(error):
