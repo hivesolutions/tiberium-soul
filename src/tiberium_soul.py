@@ -81,22 +81,9 @@ def deploy():
     file = open(file_path, "wb")
     try: file.write(contents)
     finally: file.close()
-
-    def _execute_sun():
-        if name in CURRENT:
-            process, temp_path = CURRENT[name]
-            try:
-                process.kill()
-                process.wait()
-                shutil.rmtree(temp_path)
-            except: pass
-
-        proces_t = tiberium.execute_sun(file_path, sync = False)
-        CURRENT[name] = proces_t
-
     current_time = time.time()
-    execution_thread.insert_work(current_time, _execute_sun)
-
+    execute_sun = _get_execute_sun(name, file_path)
+    execution_thread.insert_work(current_time, execute_sun)
     return "success"
 
 @app.route("/handle", methods = ("GET", "POST",))
@@ -117,6 +104,25 @@ def handler_413(error):
 @app.errorhandler(BaseException)
 def handler_exception(error):
     return str(error)
+
+def _get_execute_sun(name, file_path):
+    def execute_sun():
+        if name in CURRENT:
+            process, temp_path = CURRENT[name]
+            try:
+                process.kill()
+                process.wait()
+                shutil.rmtree(temp_path)
+            except: pass
+
+        # executes the sun file and retrieves the tuple
+        # object describing the "just" created process
+        # for the sun file execution, this value will be
+        # saved in the current map for future process actions
+        process_t = tiberium.execute_sun(file_path, sync = False)
+        CURRENT[name] = process_t
+
+    return execute_sun
 
 def run():
     # sets the debug control in the application
