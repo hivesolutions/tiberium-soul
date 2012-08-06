@@ -41,10 +41,6 @@ import os
 import glob
 import setuptools
 
-import os
-import glob
-import setuptools
-
 def find_data_files(source_path, target_path, patterns):
     """
     Finds data files in the given source path and maps them
