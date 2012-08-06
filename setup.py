@@ -55,9 +55,6 @@ setuptools.setup(
         "tiberium_soul",
         "execution"
     ],
-    packages = [
-        "utils"
-    ],
     package_dir = {
         "" : os.path.normpath("src")
     },
