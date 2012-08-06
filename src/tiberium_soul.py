@@ -135,6 +135,7 @@ def create_app():
         "name" : name,
         "description" : description,
         "domain" : "%s.tibapp" % name,
+        "schema" : "http",
         "git" : "git@tiberium:%s.git" % name
     }
 
