@@ -143,7 +143,7 @@ def create_app():
     try: json.dump(app, app_file)
     finally: app_file.close()
 
-    repo_path = os.path.join(REPOS_FOLDER, name)
+    repo_path = os.path.join(REPOS_FOLDER, "%.git" % name)
     tiberium.create_repo(repo_path)
 
     hooks_path = os.path.join(repo_path, ".git", "hooks")
