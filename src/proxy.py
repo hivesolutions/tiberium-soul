@@ -73,11 +73,8 @@ class ConnectionHandler:
             if not end == -1: break
             self.client_buffer += self.client.recv(BUFLEN)
 
-        print "'%s'" % self.client_buffer[:end]
-
         data = (self.client_buffer[:end]).split()
         self.client_buffer = self.client_buffer[end + 2:]
-        print data
         return data
 
     def get_headers(self):

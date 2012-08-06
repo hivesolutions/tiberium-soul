@@ -12,6 +12,12 @@
                     <a href="{{ app.schema }}://{{ app.domain }}">{{ app.domain }}</a>
                 </td>
             </tr>
+            <tr>
+                <td class="right label" width="50%">git</td>
+                <td class="left value" width="50%">
+                    <a href="#">{{ app.git }}</a>
+                </td>
+			</tr>
         </tbody>
     </table>
 {% endblock %}

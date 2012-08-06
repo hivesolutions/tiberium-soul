@@ -1,3 +1,6 @@
+include src/apps/README.md
 include src/repos/README.md
 include src/suns/README.md
 recursive-include src/hooks *
+recursive-include src/static *
+recursive-include src/templates *

@@ -1,7 +1,8 @@
 {
     "id" : "concordia",
     "name" : "concordia",
-    "description" : "The most powerfull scheduling generator",
+    "description" : "The most powerful scheduling generator",
     "domain" : "concordia.tibapp",
-    "schema" : "http"
+    "schema" : "http",
+    "git" : "git@tiberium:concordia.git"
 }
