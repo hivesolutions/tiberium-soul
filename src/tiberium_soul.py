@@ -38,9 +38,14 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import os
+import time
 import flask
+import atexit
+import shutil
 
 import tiberium
+
+import execution
 
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 CURRENT_DIRECTORY_ABS = os.path.abspath(CURRENT_DIRECTORY)
@@ -48,6 +53,9 @@ SUNS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "suns")
 
 app = flask.Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 1024 ** 3
+
+CURRENT = {
+}
 
 @app.route("/", methods = ("GET",))
 @app.route("/index", methods = ("GET",))
@@ -67,13 +75,28 @@ def about():
 @app.route("/deploy", methods = ("POST",))
 def deploy():
     name = flask.request.form["name"]
-    file = flask.request.files['file']
+    file = flask.request.files["file"]
     contents = file.read()
     file_path = os.path.join(SUNS_FOLDER, "%s.sun" % name)
     file = open(file_path, "wb")
     try: file.write(contents)
     finally: file.close()
-    tiberium.execute_sun(file_path)
+
+    def _execute_sun():
+        if name in CURRENT:
+            process, temp_path = CURRENT[name]
+            try:
+                process.kill()
+                process.wait()
+                shutil.rmtree(temp_path)
+            except: pass
+
+        proces_t = tiberium.execute_sun(file_path, sync = False)
+        CURRENT[name] = proces_t
+
+    current_time = time.time()
+    execution_thread.insert_work(current_time, _execute_sun)
+
     return "success"
 
 @app.route("/handle", methods = ("GET", "POST",))
@@ -111,6 +134,33 @@ def run():
         host = "0.0.0.0",
         port = port
     )
+
+    # stop the execution thread so that it's possible to
+    # the process to return the calling
+    execution_thread.stop()
+
+@atexit.register
+def stop_thread():
+    # iterates over all the names pending in execution
+    # and kill the executing processes, removing the
+    # associated files at the same time
+    for name in CURRENT:
+        process, temp_path = CURRENT[name]
+        try:
+            process.kill()
+            process.wait()
+            shutil.rmtree(temp_path)
+        except: pass
+
+    # stop the execution thread so that it's possible to
+    # the process to return the calling
+    execution_thread.stop()
+
+# creates the thread that it's going to be used to
+# execute the various background tasks and starts
+# it, providing the mechanism for execution
+execution_thread = execution.ExecutionThread()
+execution_thread.start()
 
 if __name__ == "__main__":
     run()
