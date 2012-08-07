@@ -184,6 +184,7 @@ class ProxyServer(threading.Thread):
     def start_server(self, host = "0.0.0.0", port = 80, timeout = 60, handler = ConnectionHandler):
         soc_type = socket.AF_INET
         _socket = socket.socket(soc_type)
+        _socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         _socket.bind((host, port))
 
         hostname = not port == 80 and host + ":" + str(port) or host
