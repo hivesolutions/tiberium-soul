@@ -182,7 +182,7 @@ def chown(file_path, user, group):
     group_info = grp.getgrnam("git")
     uid = pw_name.pw_uid
     gid = group_info.gr_gid
-    os.chown(target_path, uid, gid) #@UndefinedVariable
+    os.chown(file_path, uid, gid) #@UndefinedVariable
 
 @app.errorhandler(404)
 def handler_404(error):
