@@ -1,4 +1,6 @@
 {
     "hostname" : "tiberium",
-    "domain_suffix" : "tibapp"
+    "domain_suffix" : "tibapp",
+    "user" : "git",
+    "group" : "git"
 }

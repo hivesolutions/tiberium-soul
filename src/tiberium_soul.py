@@ -143,6 +143,8 @@ def create_app():
     config = get_config()
     hostname = config.get("hostname", "tiberium")
     domain_suffix = config.get("domain_suffix", "tibapp")
+    user = config.get("user", "git")
+    group = config.get("group", "git")
 
     app = {
         "id" : name,
@@ -169,7 +171,7 @@ def create_app():
         target_path = os.path.join(hooks_path, _name)
         shutil.copy(file_path, target_path)
 
-    chown_r(repo_path, "git", "git")
+    chown_r(repo_path, user, group)
 
     return flask.redirect(
         flask.url_for("show_app", id = name)
