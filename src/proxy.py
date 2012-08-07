@@ -98,15 +98,12 @@ class ConnectionHandler:
 
     def method_CONNECT(self):
         self._connect_target(self.path)
-        self.client.send(HTTPVER + " 200 Connection established\n" + "Proxy-agent: %s\n\n" % VERSION)
+        self.client.send(HTTPVER + " 200 Connection established\n" + "Proxy-agent: %s\r\n\r\n" % VERSION)
         self.client_buffer = ""
         self._read_write()
 
     def method_others(self):
-        self.path = self.path[7:]
-        i = self.path.find("/")
-        path = self.path[i:]
-        path = path or "/"
+        path = self.path or "/"
 
         host = self.headers["Host"]
         host_s = host.split(".", 1)
@@ -118,7 +115,7 @@ class ConnectionHandler:
         _process, _temp_path, port = process_t
 
         self._connect_target("localhost:" + str(port))
-        self.target.send("%s %s %s\n" % (self.method, path, self.protocol) + self._client_buffer)
+        self.target.send("%s %s %s\r\n" % (self.method, path, self.protocol) + self._client_buffer)
         self.client_buffer = ""
         self._read_write()
 
