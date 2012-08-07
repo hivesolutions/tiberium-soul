@@ -69,6 +69,7 @@ class ConnectionHandler:
             self.method_CONNECT()
         elif self.method in ("OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE"):
             self.method_others()
+
         self.client.close()
         self.target.close()
 
@@ -159,23 +160,36 @@ class ProxyServer(threading.Thread):
 
     current = None
 
+    executing = True
+
     def __init__(self, current):
         threading.Thread.__init__(self)
         self.current = current
 
     def run(self):
         self.start_server()
+        pass
 
-    def start_server(self, host = "0.0.0.0", port = 80, timeout = 60, handler = ConnectionHandler):
+    def stop(self):
+        self.stop_server()
+
+    def start_server(self, host = "0.0.0.0", port = 80, timeout = 1.0, handler = ConnectionHandler):
         soc_type = socket.AF_INET
-        soc = socket.socket(soc_type)
-        soc.bind((host, port))
+        _socket = socket.socket(soc_type)
+        _socket.bind((host, port))
 
         hostname = not port == 80 and host + ":" + str(port) or host
 
         print >> sys.stderr, " * Running proxy on http://%s/" % hostname
-        soc.listen(0)
+        _socket.listen(0)
 
-        while 1:
-            arguments = soc.accept() + (timeout, self.current)
+        while self.executing:
+            read, _write, _error = select.select([_socket], [], [], timeout)
+            if not read: continue
+            arguments = _socket.accept() + (timeout, self.current)
             thread.start_new_thread(handler, arguments)
+
+        _socket.close()
+
+    def stop_server(self):
+        self.executing = False

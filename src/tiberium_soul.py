@@ -312,12 +312,13 @@ def run():
         port = port
     )
 
-    # stop the execution thread so that it's possible to
-    # the process to return the calling
-    execution_thread.stop()
+    # runs the cleanup environment state, to be able to
+    # release all the currently allocated resources for
+    # the current tiberium soul instance
+    cleanup_environment()
 
 @atexit.register
-def stop_thread():
+def cleanup_environment():
     # iterates over all the names pending in execution
     # and kill the executing processes, removing the
     # associated files at the same time
@@ -334,11 +335,15 @@ def stop_thread():
     # the process to return the calling
     execution_thread.stop()
 
+    # stops the proxy server from executing, this should
+    # take a while to take any effect (timeout value)
+    proxy_server.stop()
+
 # creates the proxy server with the reference to
 # the current state map to be used for the proxy
 # routing rules
-server = proxy.ProxyServer(CURRENT)
-server.start()
+proxy_server = proxy.ProxyServer(CURRENT)
+proxy_server.start()
 
 # creates the thread that it's going to be used to
 # execute the various background tasks and starts
