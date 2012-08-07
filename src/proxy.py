@@ -109,7 +109,7 @@ class ConnectionHandler:
     def method_others(self):
         path = self.path or "/"
 
-        host = self.headers.get("Host", "repo")
+        host = self.headers.get("Host", DEFAULT_HOST)
         host_s = host.split(".", 1)
         name = host_s[0]
 
