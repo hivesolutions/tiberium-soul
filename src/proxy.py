@@ -39,7 +39,6 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import sys
 import socket
-import thread
 import select
 import threading
 
@@ -60,17 +59,21 @@ DEFAULT_HOST = "admin"
 """ The default host value to be used for situations
 where there's no host header available """
 
-class ConnectionHandler:
+class ConnectionHandler(threading.Thread):
+
     def __init__(self, connection, address, timeout, current):
+        threading.Thread.__init__(self)
         self.client = connection
         self.client_buffer = ""
         self.timeout = timeout
         self.current = current
-        self.method, self.path, self.protocol = self.get_base_header()
-        self._client_buffer = self.client_buffer
-        self.headers = self.get_headers()
 
+    def run(self):
         try:
+            self.method, self.path, self.protocol = self.get_base_header()
+            self._client_buffer = self.client_buffer
+            self.headers = self.get_headers()
+
             if self.method == "CONNECT":
                 self.method_CONNECT()
             elif self.method in ("OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE"):
@@ -195,8 +198,9 @@ class ProxyServer(threading.Thread):
         while self.executing:
             read, _write, _error = select.select([_socket], [], [], SELECT_TIMEOUT)
             if not read: continue
-            arguments = _socket.accept() + (timeout, self.current)
-            thread.start_new_thread(handler, arguments)
+            connection, address = _socket.accept()
+            _handler = handler(connection, address, timeout, self.current)
+            _handler.start()
 
         _socket.close()
 
