@@ -168,10 +168,21 @@ def create_app():
         file_path = os.path.join(HOOKS_FOLDER, _name)
         target_path = os.path.join(hooks_path, _name)
         shutil.copy(file_path, target_path)
+        if os.name == "nt": continue
+        chown(target_path, "gid", "gid")
 
     return flask.redirect(
         flask.url_for("show_app", id = name)
     )
+
+def chown(file_path, user, group):
+    import pwd
+    import grp
+    pw_name = pwd.getpwnam("git")
+    group_info = grp.getgrnam("git")
+    uid = pw_name.pw_uid
+    gid = group_info.gr_gid
+    os.chown(target_path, uid, gid) #@UndefinedVariable
 
 @app.errorhandler(404)
 def handler_404(error):
