@@ -168,14 +168,31 @@ def create_app():
         file_path = os.path.join(HOOKS_FOLDER, _name)
         target_path = os.path.join(hooks_path, _name)
         shutil.copy(file_path, target_path)
-        if os.name == "nt": continue
-        chown(target_path, "gid", "gid")
+
+    chown_r(repo_path, "git", "git")
 
     return flask.redirect(
         flask.url_for("show_app", id = name)
     )
 
+def chown_r(path, user, group):
+    # in case the current operative system is
+    # windows base cannot set the owner, and
+    # must return immediately
+    if os.name == "nt": return
+
+    for base, dirs, files in os.walk(path):
+        for name in dirs:
+            chown(os.path.join(base, name), "git", "git")
+        for name in files:
+            chown(os.path.join(base, name), "git", "git")
+
 def chown(file_path, user, group):
+    # in case the current operative system is
+    # windows base cannot set the owner, and
+    # must return immediately
+    if os.name == "nt": return
+
     import pwd
     import grp
     pw_name = pwd.getpwnam("git")
