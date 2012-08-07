@@ -183,9 +183,11 @@ def chown_r(path, user, group):
 
     for base, dirs, files in os.walk(path):
         for name in dirs:
-            chown(os.path.join(base, name), "git", "git")
+            chown(os.path.join(base, name), user, group)
         for name in files:
-            chown(os.path.join(base, name), "git", "git")
+            chown(os.path.join(base, name), user, group)
+
+    chown(path, user, group)
 
 def chown(file_path, user, group):
     # in case the current operative system is
@@ -195,8 +197,8 @@ def chown(file_path, user, group):
 
     import pwd
     import grp
-    pw_name = pwd.getpwnam("git")
-    group_info = grp.getgrnam("git")
+    pw_name = pwd.getpwnam(user)
+    group_info = grp.getgrnam(group)
     uid = pw_name.pw_uid
     gid = group_info.gr_gid
     os.chown(file_path, uid, gid) #@UndefinedVariable
