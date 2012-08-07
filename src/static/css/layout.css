@@ -307,3 +307,15 @@ pre {
     text-align: center;
     width: 24px;
 }
+
+.commands {
+    background-color: #f6f6f6;
+    color: #4d4d4d;
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 22px;
+    margin: 20px auto 20px auto;
+    padding: 6px 12px 6px 12px;
+    text-align: left;
+    width: 420px;
+}

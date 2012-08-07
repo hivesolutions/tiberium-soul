@@ -60,6 +60,7 @@ available for the working of the soul instance """
 
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 CURRENT_DIRECTORY_ABS = os.path.abspath(CURRENT_DIRECTORY)
+GLOBAL_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "global")
 SUNS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "suns")
 REPOS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "repos")
 HOOKS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "hooks")
@@ -117,6 +118,15 @@ def show_app(id):
         app = app
     )
 
+@app.route("/apps/<id>/help", methods = ("GET",))
+def help_app(id):
+    app = get_app(id)
+    return flask.render_template(
+        "apps_help.html.tpl",
+        link = "apps",
+        sub_link = "help",
+        app = app
+    )
 
 @app.route("/apps/new", methods = ("GET",))
 def new_app():
@@ -130,13 +140,17 @@ def create_app():
     name = flask.request.form.get("name", None)
     description = flask.request.form.get("description", None)
 
+    config = get_config()
+    hostname = config.get("hostname", "tiberium")
+    domain_suffix = config.get("domain_suffix", "tibapp")
+
     app = {
         "id" : name,
         "name" : name,
         "description" : description,
-        "domain" : "%s.tibapp" % name,
+        "domain" : "%s.%s" % (name, domain_suffix),
         "schema" : "http",
-        "git" : "git@tiberium:%s.git" % name
+        "git" : "git@%s:%s.git" % (hostname, name)
     }
 
     app_path = os.path.join(APPS_FOLDER, "%s.json" % name)
@@ -176,6 +190,18 @@ def handler_exception(error):
     traceback.print_exc(file=sys.stdout)
     print '-' * 60
     return str(error)
+
+def get_config():
+    # retrieves the path to the (target) config (configuration) file and
+    # check if it exists then opens it and loads the json configuration
+    # contained in it to config it in the template
+    config_path = os.path.join(GLOBAL_FOLDER, "config.json")
+    if not os.path.exists(config_path): raise RuntimeError("Config file does not exist")
+    config_file = open(config_path, "rb")
+    try: config = json.load(config_file)
+    finally: config_file.close()
+
+    return config
 
 def get_apps():
     apps_directory = os.path.join(APPS_FOLDER)
