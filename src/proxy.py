@@ -51,6 +51,10 @@ VERSION = "Python Proxy/" + __version__
 
 HTTPVER = "HTTP/1.1"
 
+DEFAULT_HOST = "admin"
+""" The default host value to be used for situations
+where there's no host header available """
+
 class ConnectionHandler:
     def __init__(self, connection, address, timeout, current):
         self.client = connection
@@ -105,7 +109,7 @@ class ConnectionHandler:
     def method_others(self):
         path = self.path or "/"
 
-        host = self.headers["Host"]
+        host = self.headers.get("Host", "repo")
         host_s = host.split(".", 1)
         name = host_s[0]
 
