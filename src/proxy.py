@@ -78,10 +78,12 @@ class ConnectionHandler(threading.Thread):
                 self.method_CONNECT()
             elif self.method in ("OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE"):
                 self.method_others()
+        except BaseException, exception:
+            self.client.send("Problem in routing - %s" % str(exception))
+        else:
+            self.target.close()
         finally:
             self.client.close()
-
-        self.target.close()
 
     def get_base_header(self):
         while 1:
@@ -125,7 +127,7 @@ class ConnectionHandler(threading.Thread):
         name = host_s[0]
 
         process_t = self.current.get(name, None)
-        if not process_t: raise RuntimeError("Problem handling the request, no process available (%s)" % name)
+        if not process_t: raise RuntimeError("No process available for request (%s)" % name)
 
         _process, _temp_path, port = process_t
 
