@@ -169,7 +169,7 @@ def create_app():
     for _name in names:
         file_path = os.path.join(HOOKS_FOLDER, _name)
         target_path = os.path.join(hooks_path, _name)
-        shutil.copy(file_path, target_path)
+        shutil.copy2(file_path, target_path)
 
     chown_r(repo_path, user, group)
 
