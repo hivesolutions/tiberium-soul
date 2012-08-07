@@ -58,6 +58,7 @@ class ConnectionHandler:
         self.timeout = timeout
         self.current = current
         self.method, self.path, self.protocol = self.get_base_header()
+        self._client_buffer = self.client_buffer
         self.headers = self.get_headers()
 
         if self.method == "CONNECT":
@@ -117,7 +118,7 @@ class ConnectionHandler:
         _process, _temp_path, port = process_t
 
         self._connect_target("localhost:" + str(port))
-        self.target.send("%s %s %s\n" % (self.method, path, self.protocol) + self.client_buffer)
+        self.target.send("%s %s %s\n" % (self.method, path, self.protocol) + self._client_buffer)
         self.client_buffer = ""
         self._read_write()
 
