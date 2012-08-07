@@ -141,7 +141,7 @@ def create_app():
     description = flask.request.form.get("description", None)
 
     config = get_config()
-    hostname = config.get("hostname", "tiberium")
+    hostname = config.get("hostname", "repo.tiberium")
     domain_suffix = config.get("domain_suffix", "tibapp")
     user = config.get("user", "git")
     group = config.get("group", "git")
