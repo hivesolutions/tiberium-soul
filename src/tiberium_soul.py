@@ -302,6 +302,7 @@ def run():
     debug = os.environ.get("DEBUG", False) and True or False
     reloader = os.environ.get("RELOADER", False) and True or False
     port = int(os.environ.get("PORT", 5000))
+    CURRENT["admin"] = (None, None, port)
     app.debug = debug
     app.run(
         use_debugger = debug,
@@ -321,11 +322,12 @@ def stop_thread():
     # and kill the executing processes, removing the
     # associated files at the same time
     for name in CURRENT:
-        process, temp_path = CURRENT[name]
+        process, temp_path, port = CURRENT[name]
         try:
             process.kill()
             process.wait()
             shutil.rmtree(temp_path)
+            PORTS.append(port)
         except: pass
 
     # stop the execution thread so that it's possible to
