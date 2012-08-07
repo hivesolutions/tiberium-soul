@@ -77,7 +77,8 @@ class ConnectionHandler:
                 self.method_others()
         finally:
             self.client.close()
-            self.target.close()
+
+        self.target.close()
 
     def get_base_header(self):
         while 1:

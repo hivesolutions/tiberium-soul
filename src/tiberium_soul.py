@@ -178,34 +178,6 @@ def create_app():
         flask.url_for("show_app", id = name)
     )
 
-def chown_r(path, user, group):
-    # in case the current operative system is
-    # windows base cannot set the owner, and
-    # must return immediately
-    if os.name == "nt": return
-
-    for base, dirs, files in os.walk(path):
-        for name in dirs:
-            chown(os.path.join(base, name), user, group)
-        for name in files:
-            chown(os.path.join(base, name), user, group)
-
-    chown(path, user, group)
-
-def chown(file_path, user, group):
-    # in case the current operative system is
-    # windows base cannot set the owner, and
-    # must return immediately
-    if os.name == "nt": return
-
-    import pwd
-    import grp
-    pw_name = pwd.getpwnam(user)
-    group_info = grp.getgrnam(group)
-    uid = pw_name.pw_uid
-    gid = group_info.gr_gid
-    os.chown(file_path, uid, gid) #@UndefinedVariable
-
 @app.errorhandler(404)
 def handler_404(error):
     return str(error)
@@ -264,6 +236,47 @@ def get_app(id):
     finally: app_file.close()
 
     return app
+
+def redeploy():
+    names = os.listdir(SUNS_FOLDER)
+
+    for name in names:
+        _base, extension = os.path.splitext(name)
+        if not extension == ".sun": continue
+
+        _name = name.strip(".sun")
+        file_path = os.path.join(SUNS_FOLDER, "%s.sun" % _name)
+        current_time = time.time()
+        execute_sun = _get_execute_sun(_name, file_path)
+        execution_thread.insert_work(current_time, execute_sun)
+
+def chown_r(path, user, group):
+    # in case the current operative system is
+    # windows base cannot set the owner, and
+    # must return immediately
+    if os.name == "nt": return
+
+    for base, dirs, files in os.walk(path):
+        for name in dirs:
+            chown(os.path.join(base, name), user, group)
+        for name in files:
+            chown(os.path.join(base, name), user, group)
+
+    chown(path, user, group)
+
+def chown(file_path, user, group):
+    # in case the current operative system is
+    # windows base cannot set the owner, and
+    # must return immediately
+    if os.name == "nt": return
+
+    import pwd
+    import grp
+    pw_name = pwd.getpwnam(user)
+    group_info = grp.getgrnam(group)
+    uid = pw_name.pw_uid
+    gid = group_info.gr_gid
+    os.chown(file_path, uid, gid) #@UndefinedVariable
 
 def _get_execute_sun(name, file_path):
     def execute_sun():
@@ -351,6 +364,8 @@ proxy_server.start()
 # it, providing the mechanism for execution
 execution_thread = execution.ExecutionThread()
 execution_thread.start()
+
+redeploy()
 
 if __name__ == "__main__":
     run()
