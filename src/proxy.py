@@ -51,6 +51,11 @@ VERSION = "Python Proxy/" + __version__
 
 HTTPVER = "HTTP/1.1"
 
+SELECT_TIMEOUT = 1.0
+""" The timeout to be used in the server select timeout
+this value must be low so that a signal is handled in
+a sufficient short time (rapid response) """
+
 DEFAULT_HOST = "admin"
 """ The default host value to be used for situations
 where there's no host header available """
@@ -65,13 +70,14 @@ class ConnectionHandler:
         self._client_buffer = self.client_buffer
         self.headers = self.get_headers()
 
-        if self.method == "CONNECT":
-            self.method_CONNECT()
-        elif self.method in ("OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE"):
-            self.method_others()
-
-        self.client.close()
-        self.target.close()
+        try:
+            if self.method == "CONNECT":
+                self.method_CONNECT()
+            elif self.method in ("OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE"):
+                self.method_others()
+        finally:
+            self.client.close()
+            self.target.close()
 
     def get_base_header(self):
         while 1:
@@ -141,8 +147,9 @@ class ConnectionHandler:
         while 1:
             count += 1
             (recv, _, error) = select.select(socs, [], socs, 3)
-            if error:
-                break
+
+            if error: break
+
             if recv:
                 for in_ in recv:
                     data = in_.recv(BUFLEN)
@@ -153,8 +160,8 @@ class ConnectionHandler:
                     if data:
                         out.send(data)
                         count = 0
-            if count == time_out_max:
-                break
+
+            if count == time_out_max: break
 
 class ProxyServer(threading.Thread):
 
@@ -173,7 +180,7 @@ class ProxyServer(threading.Thread):
     def stop(self):
         self.stop_server()
 
-    def start_server(self, host = "0.0.0.0", port = 80, timeout = 1.0, handler = ConnectionHandler):
+    def start_server(self, host = "0.0.0.0", port = 80, timeout = 60, handler = ConnectionHandler):
         soc_type = socket.AF_INET
         _socket = socket.socket(soc_type)
         _socket.bind((host, port))
@@ -184,7 +191,7 @@ class ProxyServer(threading.Thread):
         _socket.listen(0)
 
         while self.executing:
-            read, _write, _error = select.select([_socket], [], [], timeout)
+            read, _write, _error = select.select([_socket], [], [], SELECT_TIMEOUT)
             if not read: continue
             arguments = _socket.accept() + (timeout, self.current)
             thread.start_new_thread(handler, arguments)
