@@ -112,7 +112,7 @@ class ConnectionHandler:
         name = host_s[0]
 
         process_t = self.current.get(name, None)
-        if not process_t: raise RuntimeError("Problem handling the request, no process available (%s)", name)
+        if not process_t: raise RuntimeError("Problem handling the request, no process available (%s)" % name)
 
         _process, _temp_path, port = process_t
 
