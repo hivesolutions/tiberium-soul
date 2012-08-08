@@ -134,6 +134,11 @@ setuptools.setup(
     keywords = "tiberium soul platform service",
     url = "http://tiberium.com",
     zip_safe = False,
+    scripts = [
+        "scripts/pypi/tiberium_soul_pypi.py",
+        "scripts/pypi/tiberium_soul.bat",
+        "scripts/pypi/tiberium_soul.sh"
+    ],
     py_modules = [
         "tiberium_soul",
         "execution",
