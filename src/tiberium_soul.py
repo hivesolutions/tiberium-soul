@@ -58,6 +58,10 @@ PORTS = [port for port in range(5001, 5100)]
 """ The list containing the tcp ports that are currently
 available for the working of the soul instance """
 
+CLEANUP = False
+""" The flag that controls if the cleanup operation has
+been already processed """
+
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 CURRENT_DIRECTORY_ABS = os.path.abspath(CURRENT_DIRECTORY)
 GLOBAL_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "global")
@@ -333,6 +337,24 @@ def run():
 
 @atexit.register
 def cleanup_environment():
+    # references the cleanup variable as a global variable
+    # avoids problems with forward references
+    global CLEANUP
+
+    # in case the cleanup operation has been already processed
+    # no need for duplicated operations (returns immediately)
+    if CLEANUP: return
+
+    # stop the execution thread so that it's possible to
+    # the process to return the calling
+    execution_thread.stop()
+    execution_thread.join()
+
+    # stops the proxy server from executing, this should
+    # take a while to take any effect (timeout value)
+    proxy_server.stop()
+    proxy_server.join()
+
     # iterates over all the names pending in execution
     # and kill the executing processes, removing the
     # associated files at the same time
@@ -345,13 +367,9 @@ def cleanup_environment():
             PORTS.append(port)
         except: pass
 
-    # stop the execution thread so that it's possible to
-    # the process to return the calling
-    execution_thread.stop()
-
-    # stops the proxy server from executing, this should
-    # take a while to take any effect (timeout value)
-    proxy_server.stop()
+    # sets the cleanup flag as true so that duplicated
+    # operations are immediately avoided
+    CLEANUP = True
 
 # creates the proxy server with the reference to
 # the current state map to be used for the proxy
