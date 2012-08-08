@@ -365,6 +365,8 @@ proxy_server.start()
 execution_thread = execution.ExecutionThread()
 execution_thread.start()
 
+# redeploys the currently installed sun file so that
+# the system is restores to the actual state
 redeploy()
 
 if __name__ == "__main__":
