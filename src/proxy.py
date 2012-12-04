@@ -170,10 +170,22 @@ class ConnectionHandler(threading.Thread):
             if count == time_out_max: break
 
 class ProxyServer(threading.Thread):
+    """
+    The thread bases class that serves as the main
+    entry point for the proxy server used in the
+    tiberium.
+
+    Its main responsibilities are: handling of new
+    connections and forwarding of data.
+    """
 
     current = None
+    """ The global state related values to be passed across
+    the various handling operation in the proxy server """
 
     executing = True
+    """ The flag that controls the continuous execution
+    of the proxy server, if unset the proxy handling stops """
 
     def __init__(self, current):
         threading.Thread.__init__(self)
@@ -186,17 +198,26 @@ class ProxyServer(threading.Thread):
     def stop(self):
         self.stop_server()
 
-    def start_server(self, host = "0.0.0.0", port = 80, timeout = 60, handler = ConnectionHandler):
-        soc_type = socket.AF_INET
-        _socket = socket.socket(soc_type)
+    def start_server(self, host = "0.0.0.0", port = 8080, timeout = 60, handler = ConnectionHandler):
+        # creates the (internet) socket for the service and binds
+        # it to the required host and port
+        socket_type = socket.AF_INET
+        _socket = socket.socket(socket_type)
         _socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         _socket.bind((host, port))
 
+        # creates the hostname string value taking into account if the
+        # provided port is the default one for the connection, then
+        # prints the information on the hostname binding
         hostname = not port == 80 and host + ":" + str(port) or host
-
         print >> sys.stderr, " * Running proxy on http://%s/" % hostname
+
+        # starts listening in the socket for the various connections to
+        # be received in the current proxy
         _socket.listen(0)
 
+        # iterates continuously, while the executing flag is set, supposed
+        # to be iterating
         while self.executing:
             read, _write, _error = select.select([_socket], [], [], SELECT_TIMEOUT)
             if not read: continue
@@ -204,6 +225,8 @@ class ProxyServer(threading.Thread):
             _handler = handler(connection, address, timeout, self.current)
             _handler.start()
 
+        # closes the service socket as no more work is meant to be processed
+        # (end of the proxy task)
         _socket.close()
 
     def stop_server(self):
