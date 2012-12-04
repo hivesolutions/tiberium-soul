@@ -167,9 +167,9 @@ class ConnectionHandler(threading.Thread):
                     data = in_.recv(BUFLEN)
                     if in_ is self.client: out = self.target
                     else: out = self.client
-                    
+
                     if not data: continue
-                    
+
                     out.send(data)
                     count = 0
 

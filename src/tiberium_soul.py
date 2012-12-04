@@ -90,13 +90,22 @@ def about():
 
 @app.route("/deploy", methods = ("POST",))
 def deploy():
+    # retrieves the name of the sun file to be deployed
+    # and the contents of the file to be deployed
     name = flask.request.form["name"]
     file = flask.request.files["file"]
+
+    # reads the complete file contents from the request and
+    # then retrieves the associated sun file to update it
     contents = file.read()
     file_path = os.path.join(SUNS_FOLDER, "%s.sun" % name)
     file = open(file_path, "wb")
     try: file.write(contents)
     finally: file.close()
+
+    # retrieves the current time (to insert the job immediately)
+    # and then retrieves the "clojure method" to be used in the
+    # execution (deployment) of the sun file
     current_time = time.time()
     execute_sun = _get_execute_sun(name, file_path)
     execution_thread.insert_work(current_time, execute_sun)
@@ -211,9 +220,9 @@ def handler_exception(error):
     import traceback
     import sys
     print "Exception in user code:"
-    print '-' * 60
-    traceback.print_exc(file=sys.stdout)
-    print '-' * 60
+    print "-" * 60
+    traceback.print_exc(file = sys.stdout)
+    print "-" * 60
     return str(error)
 
 def get_config():
