@@ -68,6 +68,7 @@ class ConnectionHandler(threading.Thread):
 
     def __init__(self, connection, address, timeout, current):
         threading.Thread.__init__(self)
+
         self.client = connection
         self.client_buffer = ""
         self.timeout = timeout
@@ -196,6 +197,7 @@ class ProxyServer(threading.Thread):
 
     def __init__(self, current):
         threading.Thread.__init__(self)
+
         self.current = current
 
     def run(self):
