@@ -23,8 +23,8 @@ Currently Tiberium Soul depends on:
 In order to be able to run the deployment of the server using the "default" git user it
 must be created in the target machine.
 
-`$ adduser git`
-`# passwd git`
+	$ adduser git
+	$ passwd git
 
 ### Execution
 
