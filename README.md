@@ -10,17 +10,21 @@ This series of sets assume that the target machine is running Ubuntu Linux 12.10
 
 Currently Tiberium Soul depends on:
 
-* Tiberium
-* Flask
-* Git
-* Linux
+* git
+* python-setuptools
+* pip
+* virtualenv
+* tiberium
+* flask
+* linux
 
 ### Creation of the git user
 
 In order to be able to run the deployment of the server using the "default" git user it
 must be created in the target machine.
 
-@TODO Must implement the instructions here.
+`$ adduser git`
+`# passwd git`
 
 ### Execution
 
