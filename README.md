@@ -31,7 +31,7 @@ must be created in the target machine.
 After correctly installing tiberium soul execute the following command to start the gateway
 and deployment infra-structures.
 
-`$ tiberium_soul.sh`
+	$ tiberium_soul.sh
 
 ## Build
 
@@ -40,4 +40,4 @@ and deployment infra-structures.
 If the configuration file for pypi (setup.py) is correctly defined and you ha ve the correct
 permission for it you may upload it to the python package index.
 
-`$ python setup.py sdist upload`
+	$ python setup.py sdist upload
