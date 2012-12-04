@@ -22,4 +22,9 @@ must be created in the target machine.
 
 #@TODO Must implement the instruction here.
 
-### 
+### Execution
+
+After correctly installing tiberium soul execute the following command to start the gateway
+and deployment infra-structures.
+
+`tiberium_soul.sh`
