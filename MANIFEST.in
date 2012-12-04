@@ -6,3 +6,4 @@ recursive-include src/global *
 recursive-include src/hooks *
 recursive-include src/static *
 recursive-include src/templates *
+recursive-include src/tmp *

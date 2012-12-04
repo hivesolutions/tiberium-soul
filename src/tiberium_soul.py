@@ -65,6 +65,7 @@ been already processed """
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 CURRENT_DIRECTORY_ABS = os.path.abspath(CURRENT_DIRECTORY)
 GLOBAL_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "global")
+TEMP_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "tmp")
 SUNS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "suns")
 REPOS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "repos")
 HOOKS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "hooks")
@@ -273,7 +274,7 @@ def redeploy():
         _base, extension = os.path.splitext(name)
         if not extension == ".sun": continue
 
-        _name = name.strip(".sun")
+        _name = name[:-4]
         file_path = os.path.join(SUNS_FOLDER, "%s.sun" % _name)
         current_time = time.time()
         execute_sun = _get_execute_sun(_name, file_path)
@@ -318,6 +319,10 @@ def _get_execute_sun(name, file_path):
                 PORTS.append(port)
             except: pass
 
+        # creates the full path to the "target" temporary
+        # path to be used in the execution
+        temp_path = os.path.join(TEMP_FOLDER, name)
+
         # retrieves the next available port from the list
         # of currently available ports
         port = PORTS.pop()
@@ -332,7 +337,9 @@ def _get_execute_sun(name, file_path):
         # object describing the "just" created process
         # for the sun file execution, this value will be
         # saved in the current map for future process actions
-        process, temp_path = tiberium.execute_sun(file_path, env = env, sync = False)
+        process, temp_path = tiberium.execute_sun(
+            file_path, temp_path = temp_path, env = env, sync = False
+        )
         CURRENT[name] = (process, temp_path, port)
 
     return execute_sun
