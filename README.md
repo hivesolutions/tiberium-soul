@@ -36,4 +36,4 @@ and deployment infra-structures.
 If the configuration file for pypi (setup.py) is correctly defined and you ha ve the correct
 permission for it you may upload it to the python package index.
 
-`python setup.py sdist upload`
+`$ python setup.py sdist upload`

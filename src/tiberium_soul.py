@@ -141,15 +141,21 @@ def new_app():
 
 @app.route("/apps", methods = ("POST",))
 def create_app():
+    # retrieves the name and the description attributes of
+    # the app to be used in the creation
     name = flask.request.form.get("name", None)
     description = flask.request.form.get("description", None)
 
+    # retrieves the current configuration structure to be able
+    # to retrieve a series of configuration attributes
     config = get_config()
     hostname = config.get("hostname", "repo.tiberium")
     domain_suffix = config.get("domain_suffix", "tibapp")
     user = config.get("user", "git")
     group = config.get("group", "git")
 
+    # creates the map containing the complete description of the
+    # app from the provided parameters and configuration
     app = {
         "id" : name,
         "name" : name,
@@ -159,16 +165,24 @@ def create_app():
         "git" : "git@%s:%s.git" % (hostname, name)
     }
 
+    # creates the complete path to the application information
+    # file and opens it dumping the contents of the map into it
     app_path = os.path.join(APPS_FOLDER, "%s.json" % name)
     app_file = open(app_path, "wb")
     try: json.dump(app, app_file)
     finally: app_file.close()
 
+    # retrieves the (complete) repository path for the current app
+    # and creates the repository in it (uses tiberium)
     repo_path = os.path.join(REPOS_FOLDER, "%s.git" % name)
     tiberium.create_repo(repo_path)
 
+    # retrieves the "proper" path to the hooks in the application
+    # to copy and change their permissions
     hooks_path = os.path.join(repo_path, ".git", "hooks")
 
+    # lists the names of the various hook files and then copies
+    # each of them to the hooks folder of the application
     names = os.listdir(HOOKS_FOLDER)
     for _name in names:
         file_path = os.path.join(HOOKS_FOLDER, _name)
@@ -176,6 +190,8 @@ def create_app():
         shutil.copy(file_path, target_path)
         os.chmod(target_path, 0755)
 
+    # changes the owner and group of the repository path (all the
+    # applications require the same user)
     chown_r(repo_path, user, group)
 
     return flask.redirect(

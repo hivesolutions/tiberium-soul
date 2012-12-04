@@ -181,7 +181,9 @@ class ProxyServer(threading.Thread):
 
     current = None
     """ The global state related values to be passed across
-    the various handling operation in the proxy server """
+    the various handling operation in the proxy server, this
+    map should contain various options including the various
+    instances to be used in the proxy """
 
     executing = True
     """ The flag that controls the continuous execution
