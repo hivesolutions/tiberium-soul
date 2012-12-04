@@ -33,6 +33,12 @@ and deployment infra-structures.
 
 	$ tiberium_soul.sh
 
+## Types of servers
+
+* repository server -> repo.tiberium
+* admin server -> admin.tiberium
+* proxy server -> proxy.tiberium
+
 ## Build
 
 ### Uploading to pypi
