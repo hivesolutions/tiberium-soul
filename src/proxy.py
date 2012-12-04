@@ -60,6 +60,11 @@ DEFAULT_HOST = "admin"
 where there's no host header available """
 
 class ConnectionHandler(threading.Thread):
+    """
+    The thread based class meant to be used
+    in a per connection basis, each connection
+    has its own thread for handling.
+    """
 
     def __init__(self, connection, address, timeout, current):
         threading.Thread.__init__(self)
@@ -195,7 +200,6 @@ class ProxyServer(threading.Thread):
 
     def run(self):
         self.start_server()
-        pass
 
     def stop(self):
         self.stop_server()
