@@ -310,13 +310,16 @@ def chown(file_path, user, group):
 
 def _get_execute_sun(name, file_path):
     def execute_sun():
+        # in case the name is already present in the map
+        # of currently executing processes the process
+        # file for it must be "killed"
         if name in CURRENT:
             process, temp_path, port = CURRENT[name]
             try:
                 process.kill()
                 process.wait()
                 shutil.rmtree(temp_path)
-                PORTS.append(port)
+                PORTS.insert(0, port)
             except: pass
 
         # creates the full path to the "target" temporary
@@ -396,7 +399,7 @@ def cleanup_environment():
             process.kill()
             process.wait()
             shutil.rmtree(temp_path)
-            PORTS.append(port)
+            PORTS.insert(0, port)
         except: pass
 
     # sets the cleanup flag as true so that duplicated
