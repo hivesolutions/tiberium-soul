@@ -25,6 +25,11 @@ must be created in the target machine.
 
 	$ adduser git
 	$ passwd git
+	$ usermod -d /usr/local/lib/python2.7/dist-packages/tiberium_soul-0.1.0-py2.7.egg/repos/ git
+
+You can then verify the user information with.
+
+	$ finger git
 
 ### Execution
 
