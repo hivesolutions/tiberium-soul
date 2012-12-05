@@ -215,7 +215,7 @@ class ProxyServer(threading.Thread):
     def stop(self):
         self.stop_server()
 
-    def start_server(self, host = "0.0.0.0", port = 8080, timeout = 60, handler = ConnectionHandler):
+    def start_server(self, host = "0.0.0.0", port = 80, timeout = 60, handler = ConnectionHandler):
         # creates the (internet) socket for the service and binds
         # it to the required host and port
         socket_type = socket.AF_INET
