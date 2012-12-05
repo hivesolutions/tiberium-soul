@@ -270,7 +270,8 @@ class ProxyServer(threading.Thread):
         use_ssl and _socket_ssl.listen(0)
 
         # iterates continuously, while the executing flag is set, supposed
-        # to be iterating
+        # to be iterating then accepts the various incoming connections
+        # and handles it by creating a new thread handler
         while self.executing:
             read, _write, _error = select.select(sockets, [], [], SELECT_TIMEOUT)
             if not read: continue
