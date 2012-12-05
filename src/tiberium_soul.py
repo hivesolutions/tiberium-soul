@@ -166,8 +166,20 @@ def help_app(id):
 
 @app.route("/apps/<id>/restart", methods = ("GET",))
 def restart_app(id):
-    # @todo: implement this method
-    pass
+    # creates the "full" path to the sun file associated
+    # with the app with the provided id
+    file_path = os.path.join(SUNS_FOLDER, "%s.sun" % id)
+
+    # retrieves the current time (to insert the job immediately)
+    # and then retrieves the "clojure method" to be used in the
+    # execution (deployment) of the sun file
+    current_time = time.time()
+    execute_sun = _get_execute_sun(id, file_path)
+    execution_thread.insert_work(current_time, execute_sun)
+
+    return flask.redirect(
+        flask.url_for("show_app", id = id)
+    )
 
 @app.route("/apps/new", methods = ("GET",))
 def new_app():
