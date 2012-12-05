@@ -84,14 +84,17 @@ class ConnectionHandler(threading.Thread):
 
     def run(self):
         try:
-            self.method, self.path, self.protocol = self.get_base_header()
-            self._client_buffer = self.client_buffer
-            self.headers = self.get_headers()
+            # iterates continuously to handle the various request provided
+            # from the current client connection
+            while True:
+                self.method, self.path, self.protocol = self.get_base_header()
+                self._client_buffer = self.client_buffer
+                self.headers = self.get_headers()
 
-            if self.method == "CONNECT":
-                self.method_CONNECT()
-            elif self.method in ("OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE"):
-                self.method_others()
+                if self.method == "CONNECT":
+                    self.method_CONNECT()
+                elif self.method in ("OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE"):
+                    self.method_others()
         except BaseException, exception:
             self.client.send("Problem in routing - %s" % str(exception))
         else:
@@ -103,7 +106,9 @@ class ConnectionHandler(threading.Thread):
         while 1:
             end = self.client_buffer.find("\r\n")
             if not end == -1: break
-            self.client_buffer += self.client.recv(BUFFER_SIZE)
+            data = self.client.recv(BUFFER_SIZE)
+            if not data: raise RuntimeError("Problem in connection (dropped)")
+            self.client_buffer += data
 
         data = (self.client_buffer[:end]).split()
         self.client_buffer = self.client_buffer[end + 2:]
@@ -113,7 +118,9 @@ class ConnectionHandler(threading.Thread):
         while 1:
             end = self.client_buffer.find("\r\n\r\n")
             if not end == -1: break
-            self.client_buffer += self.client.recv(BUFFER_SIZE)
+            data = self.client.recv(BUFFER_SIZE)
+            if not data: raise RuntimeError("Problem in connection (dropped)")
+            self.client_buffer += data
 
         lines = self.client_buffer[:end].split("\r\n")
 
@@ -154,12 +161,22 @@ class ConnectionHandler(threading.Thread):
         self._read_write()
 
     def _connect_target(self, host):
-        i = host.find(":")
-        if not i == -1:
-            port = int(host[i + 1:])
-            host = host[:i]
+        # in case there's current an existing target connection
+        # it must be closed before "advancing" to a new one
+        if self.target: self.target.close()
+
+        # tries to find the port character separator in case it's
+        # found retrieves the port value from it, otherwise used
+        # the default port
+        index = host.find(":")
+        if not index == -1:
+            port = int(host[index + 1:])
+            host = host[:index]
         else:
             port = 80
+
+        # creates the socket for the target host and connects to
+        # it, creating a valid and ready socket
         self.target = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.target.connect((host, port))
 
