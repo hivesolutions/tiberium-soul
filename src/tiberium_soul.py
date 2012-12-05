@@ -387,7 +387,6 @@ def _get_execute_sun(name, file_path):
         # of currently executing processes the process
         # file for it must be "killed"
         if name in CURRENT:
-            if name.startswith("_"): continue
             process, temp_path, port = CURRENT[name]
             try:
                 process.kill()
