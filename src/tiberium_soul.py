@@ -555,10 +555,18 @@ def cleanup_environment():
     # operations are immediately avoided
     CLEANUP = True
 
+# retrieves the current configuration and tries to retrieve
+# the paths for the encryption (ssl) based connections
+config = get_config()
+cert_path = config.get("cert_path", None)
+key_path = config.get("key_path", None)
+
 # creates the proxy server with the reference to
 # the current state map to be used for the proxy
 # routing rules
-proxy_server = proxy.ProxyServer(CURRENT)
+proxy_server = proxy.ProxyServer(
+    CURRENT, cert_path = cert_path, key_path = key_path
+)
 proxy_server.start()
 
 # creates the thread that it's going to be used to
