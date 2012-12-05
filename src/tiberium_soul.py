@@ -132,6 +132,16 @@ def show_app(id):
         app = app
     )
 
+@app.route("/apps/<id>/env", methods = ("GET",))
+def env_app(id):
+    app = get_app(id)
+    return flask.render_template(
+        "apps_env.html.tpl",
+        link = "apps",
+        sub_link = "env",
+        app = app
+    )
+
 @app.route("/apps/<id>/help", methods = ("GET",))
 def help_app(id):
     app = get_app(id)
@@ -172,7 +182,8 @@ def create_app():
         "description" : description,
         "domain" : "%s.%s" % (name, domain_suffix),
         "schema" : "http",
-        "git" : "git@%s:%s.git" % (hostname, name)
+        "git" : "git@%s:%s.git" % (hostname, name),
+        "env" : {}
     }
 
     # creates the complete path to the application information
@@ -206,6 +217,30 @@ def create_app():
 
     return flask.redirect(
         flask.url_for("show_app", id = name)
+    )
+
+@app.route("/apps/<id>/env", methods = ("POST",))
+def set_env_app(id):
+    # retrieves the app from the provided identifier
+    # value (this map will be updated)
+    app = get_app(id)
+
+    # retrieves the key and value values from the
+    # request to be used to set the new environment
+    # variable for the app
+    key = flask.request.form["key"]
+    value = flask.request.form["value"]
+    app["env"][key] = value
+
+    # retrieves the app file and dumps the new contents
+    # of the app into it (app update)
+    app_path = os.path.join(APPS_FOLDER, "%s.json" % id)
+    app_file = open(app_path, "wb")
+    try: json.dump(app, app_file)
+    finally: app_file.close()
+
+    return flask.redirect(
+        flask.url_for("show_app", id = id)
     )
 
 @app.errorhandler(404)
@@ -326,15 +361,18 @@ def _get_execute_sun(name, file_path):
         # path to be used in the execution
         temp_path = os.path.join(TEMP_FOLDER, name)
 
+        # retrieves the app for the provided name and retrieves
+        # the set of environment variable to be used
+        app = get_app(name)
+        env = app.get("env", {})
+
         # retrieves the next available port from the list
         # of currently available ports
         port = PORTS.pop()
 
-        # creates the map of (extra) environment variables
+        # updates the map of (extra) environment variables
         # to be used for the execution of the sun file
-        env = {
-            "PORT" : str(port)
-        }
+        env["PORT"] = str(port)
 
         # executes the sun file and retrieves the tuple
         # object describing the "just" created process
