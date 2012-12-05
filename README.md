@@ -37,6 +37,11 @@ must be created in the target machine.
 You can then verify the user information with.
 
 	$ finger git
+	
+### Configuration
+
+In order to configure tiberium create an '/etc/tiberium/config.json' file with the contents
+of 'global/config.json'.
 
 ### Execution
 
