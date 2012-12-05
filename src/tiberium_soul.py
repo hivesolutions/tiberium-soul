@@ -203,12 +203,10 @@ def create_app():
         "env" : {}
     }
 
-    # creates the complete path to the application information
-    # file and opens it dumping the contents of the map into it
-    app_path = os.path.join(APPS_FOLDER, "%s.json" % name)
-    app_file = open(app_path, "wb")
-    try: json.dump(app, app_file)
-    finally: app_file.close()
+    # retrieves the database and then saves the app in the
+    # correct collection
+    db = quorum.get_mongo_db()
+    db.apps.save(app)
 
     # retrieves the (complete) repository path for the current app
     # and creates the repository in it (uses tiberium)
@@ -249,12 +247,10 @@ def set_env_app(id):
     value = flask.request.form["value"]
     app["env"][key] = value
 
-    # retrieves the app file and dumps the new contents
-    # of the app into it (app update)
-    app_path = os.path.join(APPS_FOLDER, "%s.json" % id)
-    app_file = open(app_path, "wb")
-    try: json.dump(app, app_file)
-    finally: app_file.close()
+    # saves the app back in the database to reflect
+    # the changes that were made
+    db = quorum.get_mongo_db()
+    db.apps.save(app)
 
     return flask.redirect(
         flask.url_for("show_app", id = id)
@@ -303,32 +299,17 @@ def get_config():
     return config
 
 def get_apps():
-    apps_directory = os.path.join(APPS_FOLDER)
-    if not os.path.exists(apps_directory): raise RuntimeError("Apps directory does not exist")
-    entries = os.listdir(apps_directory)
-    entries.sort()
-
-    apps = []
-
-    for entry in entries:
-        base, extension = os.path.splitext(entry)
-        if not extension == ".json": continue
-
-        app = get_app(base)
-        apps.append(app)
-
+    # retrieves the app from the provided identifier
+    # value (this map will be updated)
+    db = quorum.get_mongo_db()
+    apps = db.apps.find()
     return apps
 
 def get_app(id):
-    # retrieves the path to the (target) app (configuration) file and
-    # check if it exists then opens it and loads the json configuration
-    # contained in it to app it in the template
-    app_path = os.path.join(APPS_FOLDER, "%s.json" % id)
-    if not os.path.exists(app_path): raise RuntimeError("app file does not exist")
-    app_file = open(app_path, "rb")
-    try: app = json.load(app_file)
-    finally: app_file.close()
-
+    # retrieves the app from the provided identifier
+    # value (this map will be updated)
+    db = quorum.get_mongo_db()
+    app = db.apps.find_one({"id" : id})
     return app
 
 def redeploy():
@@ -418,7 +399,7 @@ def run():
     # runs the loading of the quorum structures, this should
     # delegate a series of setup operations to quorum
     quorum.load(app, redis_session = True)
-    
+
     # sets the debug control in the application
     # then checks the current environment variable
     # for the target port for execution (external)
