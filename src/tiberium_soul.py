@@ -157,6 +157,11 @@ def help_app(id):
         sub_link = "help",
         app = app
     )
+    
+@app.route("/apps/<id>/restart", methods = ("GET",))
+def restart_app(id):
+    # @todo: implement this method
+    pass
 
 @app.route("/apps/new", methods = ("GET",))
 def new_app():
@@ -255,7 +260,7 @@ def create_alias():
     host = flask.request.form.get("host", None)
 
     storage = get_storage()
-    storage.set("alias:%s" % host, alias)
+    storage.set("alias:%s" % alias, host)
 
     return flask.redirect(
         flask.url_for("index")

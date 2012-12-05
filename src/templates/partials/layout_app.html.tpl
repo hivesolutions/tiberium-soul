@@ -20,6 +20,12 @@
             <a href="{{ url_for('help_app', id = app.id) }}">help</a>
         {% endif %}
         //
+        {% if sub_link == "restart" %}
+            <a href="{{ url_for('restart_app', id = app.id) }}" class="active">restart</a>
+        {% else %}
+            <a href="{{ url_for('restart_app', id = app.id) }}">restart</a>
+        {% endif %}
+        //
         {% if sub_link == "delete" %}
             <a href="#" class="active">delete</a>
         {% else %}
