@@ -155,6 +155,38 @@ def edit_app(id):
         errors = {}
     )
 
+@app.route("/apps/<id>/delete_c", methods = ("GET",))
+def delete_app_c(id):
+    app = get_app(id)
+    return flask.render_template(
+        "app_delete.html.tpl",
+        link = "apps",
+        sub_link = "delete",
+        app = app,
+        errors = {}
+    )
+
+@app.route("/apps/<id>/delete", methods = ("GET",))
+def delete_app(id):
+    # retrieves the current mongo database and remvoes the
+    # app entry contained in it
+    db = quorum.get_mongo_db()
+    db.apps.remove({"id" : id})
+
+    # retrieves the (complete) repository path for the current app
+    # and removes the repository directory
+    repo_path = os.path.join(REPOS_FOLDER, "%s.git" % id)
+    shutil.rmtree(repo_path)
+
+    # retrieves the (complete) sun path for the current app and
+    # removes the sun file from the file system
+    sun_path = os.path.join(SUNS_FOLDER, "%s.sun" % id)
+    if os.path.exists(sun_path): os.remove(sun_path)
+
+    return flask.redirect(
+        flask.url_for("list_app")
+    )
+
 @app.route("/apps/<id>/help", methods = ("GET",))
 def help_app(id):
     app = get_app(id)
