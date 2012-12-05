@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008-2012 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import os
+import ssl
 import sys
 import socket
 import select
@@ -200,51 +202,94 @@ class ProxyServer(threading.Thread):
     map should contain various options including the various
     instances to be used in the proxy """
 
+    cert_path = None
+    """ The default path to the certificate file to be used
+    for ssl based connections """
+
+    key_path = None
+    """ The default path to the (private) key file to be used
+    for ssl based connections """
+
     executing = True
     """ The flag that controls the continuous execution
     of the proxy server, if unset the proxy handling stops """
 
-    def __init__(self, current):
+    def __init__(self, current, cert_path = None, key_path = None):
         threading.Thread.__init__(self)
 
         self.current = current
+        self.cert_path = cert_path
+        self.key_path = key_path
 
     def run(self):
-        self.start_server()
+        self.start_server(
+            cert_path = self.cert_path,
+            key_path = self.key_path
+        )
 
     def stop(self):
         self.stop_server()
 
-    def start_server(self, host = "0.0.0.0", port = 80, timeout = 60, handler = ConnectionHandler):
+    def start_server(self, host = "0.0.0.0", port = 8080, port_ssl = 9090, use_ssl = True, cert_path = None, key_path = None, timeout = 60, handler = ConnectionHandler):
+        # creates the list that will hold the various sockets
+        # to be used in the server
+        sockets = []
+
+        # creates the various certificate and key file paths for
+        # the usage on the ssl based connections
+        base_path = os.path.dirname(__file__)
+        cert_path = cert_path or os.path.join(base_path, "cert", "dummy.crt")
+        key_path = key_path or os.path.join(base_path, "cert", "dummy.key")
+
         # creates the (internet) socket for the service and binds
         # it to the required host and port
-        socket_type = socket.AF_INET
-        _socket = socket.socket(socket_type)
+        _socket = socket.socket(socket.AF_INET)
         _socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         _socket.bind((host, port))
+        sockets.append(_socket)
+
+        # in case the current connection should also use ssl a new socket
+        # should be created for such connections
+        if use_ssl:
+            _socket_ssl = socket.socket(socket.AF_INET)
+            _socket_ssl.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            _socket_ssl.bind((host, port_ssl))
+            sockets.append(_socket_ssl)
 
         # creates the hostname string value taking into account if the
         # provided port is the default one for the connection, then
         # prints the information on the hostname binding
         hostname = not port == 80 and host + ":" + str(port) or host
+        hostname_ssl = not port_ssl == 443 and host + ":" + str(port_ssl) or host
         print >> sys.stderr, " * Running proxy on http://%s/" % hostname
+        if use_ssl: print >> sys.stderr, " * Running proxy on https://%s/" % hostname_ssl
 
         # starts listening in the socket for the various connections to
         # be received in the current proxy
         _socket.listen(0)
+        use_ssl and _socket_ssl.listen(0)
 
         # iterates continuously, while the executing flag is set, supposed
         # to be iterating
         while self.executing:
-            read, _write, _error = select.select([_socket], [], [], SELECT_TIMEOUT)
+            read, _write, _error = select.select(sockets, [], [], SELECT_TIMEOUT)
             if not read: continue
-            connection, address = _socket.accept()
-            _handler = handler(connection, address, timeout, self.current)
-            _handler.start()
+            for read_socket in read:
+                connection, address = read_socket.accept()
+                if read_socket == _socket_ssl: connection = ssl.wrap_socket(
+                    connection,
+                    server_side = True,
+                    certfile = cert_path,
+                    keyfile = key_path
+                )
+                _handler = handler(connection, address, timeout, self.current)
+                _handler.start()
 
-        # closes the service socket as no more work is meant to be processed
-        # (end of the proxy task)
+        # closes the service sockets as no more work is meant to be processed
+        # (end of the proxy task) note that the ssl socket is only closed in
+        # case the use ssl flag is currently active
         _socket.close()
+        use_ssl and _socket_ssl.close()
 
     def stop_server(self):
         self.executing = False
