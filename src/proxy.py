@@ -42,13 +42,17 @@ import socket
 import select
 import threading
 
-__version__ = "0.1.0 Draft 1"
+BUFFER_SIZE = 4096
+""" The size of the buffer to be used in the various
+read and writes requests to be performed """
 
-BUFLEN = 4096
+AGENT = "Python Proxy/" + __version__
+""" The agent string value to be used
+while serving the proxy requests """
 
-VERSION = "Python Proxy/" + __version__
-
-HTTPVER = "HTTP/1.1"
+HTTP_VERSION = "HTTP/1.1"
+""" The version of the http protocol to be used
+while serving the proxy requests """
 
 SELECT_TIMEOUT = 1.0
 """ The timeout to be used in the server select timeout
@@ -95,7 +99,7 @@ class ConnectionHandler(threading.Thread):
         while 1:
             end = self.client_buffer.find("\r\n")
             if not end == -1: break
-            self.client_buffer += self.client.recv(BUFLEN)
+            self.client_buffer += self.client.recv(BUFFER_SIZE)
 
         data = (self.client_buffer[:end]).split()
         self.client_buffer = self.client_buffer[end + 2:]
@@ -105,7 +109,7 @@ class ConnectionHandler(threading.Thread):
         while 1:
             end = self.client_buffer.find("\r\n\r\n")
             if not end == -1: break
-            self.client_buffer += self.client.recv(BUFLEN)
+            self.client_buffer += self.client.recv(BUFFER_SIZE)
 
         lines = self.client_buffer[:end].split("\r\n")
 
@@ -121,7 +125,7 @@ class ConnectionHandler(threading.Thread):
 
     def method_CONNECT(self):
         self._connect_target(self.path)
-        self.client.send(HTTPVER + " 200 Connection established\n" + "Proxy-agent: %s\r\n\r\n" % VERSION)
+        self.client.send(HTTP_VERSION + " 200 Connection established\n" + "Proxy-agent: %s\r\n\r\n" % AGENT)
         self.client_buffer = ""
         self._read_write()
 
@@ -167,7 +171,7 @@ class ConnectionHandler(threading.Thread):
 
             if recv:
                 for in_ in recv:
-                    data = in_.recv(BUFLEN)
+                    data = in_.recv(BUFFER_SIZE)
                     if in_ is self.client: out = self.target
                     else: out = self.client
 
