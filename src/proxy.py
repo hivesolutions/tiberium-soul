@@ -42,6 +42,8 @@ import socket
 import select
 import threading
 
+import quorum
+
 BUFFER_SIZE = 4096
 """ The size of the buffer to be used in the various
 read and writes requests to be performed """
@@ -132,7 +134,7 @@ class ConnectionHandler(threading.Thread):
     def method_others(self):
         path = self.path or "/"
 
-        storage = self.current.get("_storage", None)
+        storage = quorum.get_redis()
 
         host = self.headers.get("Host", DEFAULT_HOST)
         host = storage and storage.get("alias:" + host) or host

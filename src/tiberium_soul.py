@@ -50,11 +50,7 @@ import proxy
 import quorum
 import execution
 
-try: import redis
-except: pass
-
 CURRENT = {
-    "_storage" : None
 }
 """ The base of the map that will hold the various state
 related configuration for the execution of the tiberium
@@ -63,6 +59,10 @@ soul runtime processes """
 PORTS = [port for port in range(5001, 5100)]
 """ The list containing the tcp ports that are currently
 available for the working of the soul instance """
+
+MONGO_DATABASE = "tiberium_soul"
+""" The default database to be used for the connection with
+the mongo database """
 
 CLEANUP = False
 """ The flag that controls if the cleanup operation has
@@ -79,6 +79,12 @@ APPS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "apps")
 
 app = flask.Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 1024 ** 3
+
+quorum.load(
+    app,
+    redis_session = True,
+    mongo_database = MONGO_DATABASE
+)
 
 @app.route("/", methods = ("GET",))
 @app.route("/index", methods = ("GET",))
@@ -259,7 +265,7 @@ def create_alias():
     alias = flask.request.form.get("alias", None)
     host = flask.request.form.get("host", None)
 
-    storage = get_storage()
+    storage = quorum.get_redis()
     storage.set("alias:%s" % alias, host)
 
     return flask.redirect(
@@ -366,21 +372,6 @@ def chown(file_path, user, group):
     gid = group_info.gr_gid
     os.chown(file_path, uid, gid) #@UndefinedVariable
 
-def get_storage():
-    """
-    Retrieves the current object used to store (in memory)
-    data to be read from the internal structures.
-
-    This object may be something as a in memory dictionary
-    a redis interface or something else.
-
-    @rtype: Object
-    @return: The object to be used as an interface for fast
-    key value access.
-    """
-
-    return CURRENT.get("_storage", None)
-
 def _get_execute_sun(name, file_path):
     def execute_sun():
         # in case the name is already present in the map
@@ -424,16 +415,18 @@ def _get_execute_sun(name, file_path):
     return execute_sun
 
 def run():
+    # runs the loading of the quorum structures, this should
+    # delegate a series of setup operations to quorum
+    quorum.load(app, redis_session = True)
+    
     # sets the debug control in the application
     # then checks the current environment variable
     # for the target port for execution (external)
     # and then start running it (continuous loop)
     debug = os.environ.get("DEBUG", False) and True or False
     reloader = os.environ.get("RELOADER", False) and True or False
-    redis_url = os.getenv("REDISTOGO_URL", None)
     port = int(os.environ.get("PORT", 5000))
     CURRENT["admin"] = (None, None, port)
-    CURRENT["_storage"] = redis_url and redis.from_url(redis_url) or quorum.extras.RedisShelve()
     app.debug = debug
     app.run(
         use_debugger = debug,
@@ -472,7 +465,6 @@ def cleanup_environment():
     # and kill the executing processes, removing the
     # associated files at the same time
     for name in CURRENT:
-        if name.startswith("_"): continue
         process, temp_path, port = CURRENT[name]
         try:
             process.kill()
