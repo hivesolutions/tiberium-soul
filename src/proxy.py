@@ -128,7 +128,10 @@ class ConnectionHandler(threading.Thread):
     def method_others(self):
         path = self.path or "/"
 
+        storage = self.current.get("_storage", None)
+
         host = self.headers.get("Host", DEFAULT_HOST)
+        host = storage and storage.get("alias:" + host) or host
         host_s = host.split(".", 1)
         name = host_s[0]
 
@@ -158,7 +161,7 @@ class ConnectionHandler(threading.Thread):
         count = 0
         while 1:
             count += 1
-            (recv, _, error) = select.select(socs, [], socs, 3)
+            recv, _, error = select.select(socs, [], socs, 3)
 
             if error: break
 
