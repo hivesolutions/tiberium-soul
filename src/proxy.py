@@ -230,7 +230,7 @@ class ProxyServer(threading.Thread):
     def stop(self):
         self.stop_server()
 
-    def start_server(self, host = "0.0.0.0", port = 8080, port_ssl = 9090, use_ssl = True, cert_path = None, key_path = None, timeout = 60, handler = ConnectionHandler):
+    def start_server(self, host = "0.0.0.0", port = 80, port_ssl = 443, use_ssl = True, cert_path = None, key_path = None, timeout = 60, handler = ConnectionHandler):
         # creates the list that will hold the various sockets
         # to be used in the server
         sockets = []
