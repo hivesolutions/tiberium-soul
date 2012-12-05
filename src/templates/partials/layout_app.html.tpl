@@ -27,9 +27,9 @@
         {% endif %}
         //
         {% if sub_link == "delete" %}
-            <a href="#" class="active">delete</a>
+            <a href="{{ url_for('delete_app_c', id = app.id) }}" class="active">delete</a>
         {% else %}
-            <a href="#">delete</a>
+            <a href="{{ url_for('delete_app_c', id = app.id) }}">delete</a>
         {% endif %}
     </div>
 {% endblock %}
