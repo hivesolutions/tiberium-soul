@@ -129,7 +129,7 @@ def list_app():
     apps = get_apps()
 
     return flask.render_template(
-        "apps_list.html.tpl",
+        "app_list.html.tpl",
         link = "apps",
         apps = apps
     )
@@ -138,7 +138,7 @@ def list_app():
 def show_app(id):
     app = get_app(id)
     return flask.render_template(
-        "apps_show.html.tpl",
+        "app_show.html.tpl",
         link = "apps",
         sub_link = "info",
         app = app
@@ -148,7 +148,7 @@ def show_app(id):
 def env_app(id):
     app = get_app(id)
     return flask.render_template(
-        "apps_env.html.tpl",
+        "app_env.html.tpl",
         link = "apps",
         sub_link = "env",
         app = app
@@ -158,7 +158,7 @@ def env_app(id):
 def help_app(id):
     app = get_app(id)
     return flask.render_template(
-        "apps_help.html.tpl",
+        "app_help.html.tpl",
         link = "apps",
         sub_link = "help",
         app = app
