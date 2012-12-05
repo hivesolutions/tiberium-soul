@@ -144,14 +144,15 @@ def show_app(id):
         app = app
     )
 
-@app.route("/apps/<id>/env", methods = ("GET",))
-def env_app(id):
+@app.route("/apps/<id>/edit", methods = ("GET",))
+def edit_app(id):
     app = get_app(id)
     return flask.render_template(
-        "app_env.html.tpl",
+        "app_edit.html.tpl",
         link = "apps",
-        sub_link = "env",
-        app = app
+        sub_link = "edit",
+        app = app,
+        errors = {}
     )
 
 @app.route("/apps/<id>/help", methods = ("GET",))
@@ -212,7 +213,8 @@ def create_app():
         "domain" : "%s.%s" % (name, domain_suffix),
         "schema" : "http",
         "git" : "git@%s:%s.git" % (hostname, name),
-        "env" : {}
+        "env" : {},
+        "domains" : []
     }
 
     # retrieves the database and then saves the app in the
@@ -265,19 +267,56 @@ def set_env_app(id):
     db.apps.save(app)
 
     return flask.redirect(
-        flask.url_for("show_app", id = id)
+        flask.url_for("edit_app", id = id)
     )
 
-@app.route("/alias", methods = ("POST",))
-def create_alias():
-    alias = flask.request.form.get("alias", None)
-    host = flask.request.form.get("host", None)
+@app.route("/apps/<id>/alias", methods = ("POST",))
+def set_alias_app(id):
+    # retrieves the application from the provided identifier
+    # and then retrieves its (main) domain value
+    app = get_app(id)
+    host = app.get("domain", None)
 
+    # retrieves the alias sent by the post value
+    # adds it as an alias in the app
+    alias = flask.request.form.get("alias", None)
+    app["domains"].append(alias)
+
+    # saves the app back in the database to reflect
+    # the changes that were made
+    db = quorum.get_mongo_db()
+    db.apps.save(app)
+
+    # retrieves the current storage infra-structure
+    # and sets the alias in it
     storage = quorum.get_redis()
     storage.set("alias:%s" % alias, host)
 
     return flask.redirect(
-        flask.url_for("index")
+        flask.url_for("edit_app", id = id)
+    )
+
+@app.route("/apps/<id>/alias/<alias>/unset", methods = ("GET",))
+def unset_alias_app(id, alias):
+    # retrieves the application from the provided identifier
+    # and then retrieves its (main) domain value
+    app = get_app(id)
+
+    # removes the alias from the app
+    if alias in app["domains"]: app["domains"].remove(alias)
+
+    # saves the app back in the database to reflect
+    # the changes that were made
+    db = quorum.get_mongo_db()
+    db.apps.save(app)
+
+    # retrieves the current storage infra-structure
+    # and sets the alias in it
+    storage = quorum.get_redis()
+    storage.delete("alias:%s" % alias)
+
+    return flask.redirect(
+        flask.url_for("edit_app", id = id)
     )
 
 @app.errorhandler(404)

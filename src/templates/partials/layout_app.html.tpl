@@ -8,10 +8,10 @@
             <a href="{{ url_for('show_app', id = app.id) }}">info</a>
         {% endif %}
         //
-        {% if sub_link == "env" %}
-            <a href="{{ url_for('env_app', id = app.id) }}" class="active">env</a>
+        {% if sub_link == "edit" %}
+            <a href="{{ url_for('edit_app', id = app.id) }}" class="active">edit</a>
         {% else %}
-            <a href="{{ url_for('env_app', id = app.id) }}">env</a>
+            <a href="{{ url_for('edit_app', id = app.id) }}">edit</a>
         {% endif %}
         //
         {% if sub_link == "help" %}
