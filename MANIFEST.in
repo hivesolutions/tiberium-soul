@@ -2,6 +2,7 @@ include src/repos/README.md
 include src/suns/README.md
 include src/tmp/README.md
 recursive-include scripts *
+recursive-include src/cert *
 recursive-include src/global *
 recursive-include src/hooks *
 recursive-include src/static *
