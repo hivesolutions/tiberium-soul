@@ -18,6 +18,13 @@ Currently Tiberium Soul depends on:
 * flask
 * linux
 
+Optional/optimal dependencies include:
+
+* mongodb
+* redis
+* python-mongo
+* python-redis
+
 ### Creation of the git user
 
 In order to be able to run the deployment of the server using the "default" git user it
