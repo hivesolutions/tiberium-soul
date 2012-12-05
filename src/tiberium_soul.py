@@ -157,7 +157,7 @@ def help_app(id):
         sub_link = "help",
         app = app
     )
-    
+
 @app.route("/apps/<id>/restart", methods = ("GET",))
 def restart_app(id):
     # @todo: implement this method
@@ -387,6 +387,7 @@ def _get_execute_sun(name, file_path):
         # of currently executing processes the process
         # file for it must be "killed"
         if name in CURRENT:
+            if name.startswith("_"): continue
             process, temp_path, port = CURRENT[name]
             try:
                 process.kill()
@@ -472,6 +473,7 @@ def cleanup_environment():
     # and kill the executing processes, removing the
     # associated files at the same time
     for name in CURRENT:
+        if name.startswith("_"): continue
         process, temp_path, port = CURRENT[name]
         try:
             process.kill()
