@@ -68,6 +68,12 @@ CLEANUP = False
 """ The flag that controls if the cleanup operation has
 been already processed """
 
+CONFIG_PATHS = (
+    "/etc/tiberium/config.json",
+)
+""" The various config paths to be searched before using
+the default config file """
+
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 CURRENT_DIRECTORY_ABS = os.path.abspath(CURRENT_DIRECTORY)
 GLOBAL_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "global")
@@ -370,10 +376,18 @@ def handler_exception(error):
     return str(error)
 
 def get_config():
+    # sets the initial config path as unset then iterates
+    # over the various config file to try to find one that
+    # is valid in the current file system
+    config_path = None
+    for _config_path in CONFIG_PATHS:
+        if not os.path.exists(_config_path): continue
+        config_path = _config_path
+
     # retrieves the path to the (target) config (configuration) file and
     # check if it exists then opens it and loads the json configuration
     # contained in it to config it in the template
-    config_path = os.path.join(GLOBAL_FOLDER, "config.json")
+    config_path = config_path or os.path.join(GLOBAL_FOLDER, "config.json")
     if not os.path.exists(config_path): raise RuntimeError("Config file does not exist")
     config_file = open(config_path, "rb")
     try: config = json.load(config_file)
