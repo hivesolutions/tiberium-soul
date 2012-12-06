@@ -40,8 +40,8 @@ You can then verify the user information with.
 	
 ### Configuration
 
-In order to configure tiberium create an '/etc/tiberium/config.json' file with the contents
-of 'global/config.json'.
+In order to configure tiberium create an `/etc/tiberium/config.json` file with the contents
+of `global/config.json`.
 
 An example configuration would be:
 
