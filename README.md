@@ -43,6 +43,17 @@ You can then verify the user information with.
 In order to configure tiberium create an '/etc/tiberium/config.json' file with the contents
 of 'global/config.json'.
 
+An example configuration would be:
+
+	{
+	    "hostname" : "repo.hostname",
+	    "domain_suffix" : "hostname",
+    	"user" : "git",
+    	"group" : "git",
+    	"cert_path" : "/etc/tiberium/cerfile.cer",
+    	"key_path" : "/etc/tiberium/keyfile.key"
+	}
+
 ### Execution
 
 After correctly installing tiberium soul execute the following command to start the gateway
