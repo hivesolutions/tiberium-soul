@@ -103,7 +103,7 @@ class ConnectionHandler(threading.Thread):
             self.client.close()
 
     def get_base_header(self):
-        while 1:
+        while True:
             end = self.client_buffer.find("\r\n")
             if not end == -1: break
             data = self.client.recv(BUFFER_SIZE)
@@ -115,7 +115,7 @@ class ConnectionHandler(threading.Thread):
         return data
 
     def get_headers(self):
-        while 1:
+        while True:
             end = self.client_buffer.find("\r\n\r\n")
             if not end == -1: break
             data = self.client.recv(BUFFER_SIZE)
@@ -184,7 +184,7 @@ class ConnectionHandler(threading.Thread):
         time_out_max = self.timeout / 3
         socs = [self.client, self.target]
         count = 0
-        while 1:
+        while True:
             count += 1
             recv, _, error = select.select(socs, [], socs, 3)
 
