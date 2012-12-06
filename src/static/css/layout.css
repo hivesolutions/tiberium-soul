@@ -123,6 +123,7 @@ form.line {
 .form.form-simple .button {
     border: 1px solid #e0e0e0;
     border-radius: 4px 4px 4px 4px;
+    color: #888888;
     font-size: 16px;
     margin: 16px 0px 16px 0px;
     padding: 6px 6px 6px 6px;
@@ -132,6 +133,7 @@ form.line {
 
 .form.form-simple .button:hover {
     border-color: #999999;
+    color: #4d4d4d;
 }
 
 .form.form-simple > .submit-button {
