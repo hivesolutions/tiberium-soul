@@ -46,6 +46,11 @@ form.line {
     width: 420px;
 }
 
+.box {
+    border: 1px dashed #e0e0e0;
+    padding-bottom: 18px;
+}
+
 .form.form-simple {
     margin: 46px auto 46px auto;
 }
