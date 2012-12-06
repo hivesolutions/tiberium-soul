@@ -565,7 +565,9 @@ key_path = config.get("key_path", None)
 # the current state map to be used for the proxy
 # routing rules
 proxy_server = proxy.ProxyServer(
-    CURRENT, cert_path = cert_path, key_path = key_path
+    CURRENT,
+    cert_path = cert_path,
+    key_path = key_path
 )
 proxy_server.start()
 
