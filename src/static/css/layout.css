@@ -29,6 +29,10 @@
  __license__   = GNU General Public License (GPL), Version 3
 */
 
+.footer-logo {
+    background-image: url(../images/logo-footer.png);
+}
+
 form.line {
     margin: 0px 0px 0px 0px;
     width: auto;
