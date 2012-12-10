@@ -81,7 +81,6 @@ TEMP_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "tmp")
 SUNS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "suns")
 REPOS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "repos")
 HOOKS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "hooks")
-APPS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "apps")
 
 app = flask.Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 1024 ** 3
@@ -114,10 +113,14 @@ def deploy():
     name = flask.request.form["name"]
     file = flask.request.files["file"]
 
+    # retrieves the directory to be used as the
+    # based for the sun files
+    suns_folder = get_suns_folder()
+
     # reads the complete file contents from the request and
     # then retrieves the associated sun file to update it
     contents = file.read()
-    file_path = os.path.join(SUNS_FOLDER, "%s.sun" % name)
+    file_path = os.path.join(suns_folder, "%s.sun" % name)
     file = open(file_path, "wb")
     try: file.write(contents)
     finally: file.close()
@@ -174,19 +177,25 @@ def delete_app_c(id):
 
 @app.route("/apps/<id>/delete", methods = ("GET",))
 def delete_app(id):
-    # retrieves the current mongo database and remvoes the
+    # retrieves both the directory to used as the
+    # base for the sun files and the directory used
+    # to store the repositories
+    suns_folder = get_suns_folder()
+    repos_folder = get_repos_folder()
+
+    # retrieves the current mongo database and removes the
     # app entry contained in it
     db = quorum.get_mongo_db()
     db.apps.remove({"id" : id})
 
     # retrieves the (complete) repository path for the current app
     # and removes the repository directory
-    repo_path = os.path.join(REPOS_FOLDER, "%s.git" % id)
+    repo_path = os.path.join(repos_folder, "%s.git" % id)
     shutil.rmtree(repo_path)
 
     # retrieves the (complete) sun path for the current app and
     # removes the sun file from the file system
-    sun_path = os.path.join(SUNS_FOLDER, "%s.sun" % id)
+    sun_path = os.path.join(suns_folder, "%s.sun" % id)
     if os.path.exists(sun_path): os.remove(sun_path)
 
     return flask.redirect(
@@ -205,9 +214,13 @@ def help_app(id):
 
 @app.route("/apps/<id>/restart", methods = ("GET",))
 def restart_app(id):
+    # retrieves the directory to be used as the
+    # based for the sun files
+    suns_folder = get_suns_folder()
+
     # creates the "full" path to the sun file associated
     # with the app with the provided id
-    file_path = os.path.join(SUNS_FOLDER, "%s.sun" % id)
+    file_path = os.path.join(suns_folder, "%s.sun" % id)
 
     # retrieves the current time (to insert the job immediately)
     # and then retrieves the "clojure method" to be used in the
@@ -242,6 +255,10 @@ def create_app():
     user = config.get("user", "git")
     group = config.get("group", "git")
 
+    # retrieves the directory used to store the repository
+    # for the various applications
+    repos_folder = get_repos_folder()
+
     # creates the map containing the complete description of the
     # app from the provided parameters and configuration
     app = {
@@ -262,7 +279,7 @@ def create_app():
 
     # retrieves the (complete) repository path for the current app
     # and creates the repository in it (uses tiberium)
-    repo_path = os.path.join(REPOS_FOLDER, "%s.git" % name)
+    repo_path = os.path.join(repos_folder, "%s.git" % name)
     tiberium.create_repo(repo_path)
 
     # retrieves the "proper" path to the hooks in the application
@@ -395,6 +412,16 @@ def get_config():
 
     return config
 
+def get_suns_folder():
+    config = get_config()
+    suns_folder = config.get("suns_dir", SUNS_FOLDER)
+    return suns_folder
+
+def get_repos_folder():
+    config = get_config()
+    suns_folder = config.get("repos_dir", REPOS_FOLDER)
+    return suns_folder
+
 def get_apps():
     # retrieves the app from the provided identifier
     # value (this map will be updated)
@@ -410,14 +437,15 @@ def get_app(id):
     return app
 
 def redeploy():
-    names = os.listdir(SUNS_FOLDER)
+    suns_folder = get_suns_folder()
+    names = os.listdir(suns_folder)
 
     for name in names:
         _base, extension = os.path.splitext(name)
         if not extension == ".sun": continue
 
         _name = name[:-4]
-        file_path = os.path.join(SUNS_FOLDER, "%s.sun" % _name)
+        file_path = os.path.join(suns_folder, "%s.sun" % _name)
         current_time = time.time()
         execute_sun = _get_execute_sun(_name, file_path)
         execution_thread.insert_work(current_time, execute_sun)
