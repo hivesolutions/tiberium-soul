@@ -51,7 +51,9 @@ An example configuration would be:
     	"user" : "git",
     	"group" : "git",
     	"cert_path" : "/etc/tiberium/cerfile.cer",
-    	"key_path" : "/etc/tiberium/keyfile.key"
+    	"key_path" : "/etc/tiberium/keyfile.key",
+    	"suns_dir" : "/var/tiberium/suns",
+    	"repos_dir" : "/var/tiberium/repos"
 	}
 
 ### Execution
