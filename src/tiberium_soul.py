@@ -556,8 +556,6 @@ def cleanup_environment():
     # references the a series of variables as a global variables
     # avoids problems with forward references
     global CLEANUP
-    global execution_thread
-    global proxy_server
 
     # in case the cleanup operation has been already processed
     # no need for duplicated operations (returns immediately)
@@ -590,6 +588,11 @@ def cleanup_environment():
     CLEANUP = True
 
 def start():
+    # references the a series of variables as a global variables
+    # avoids problems with forward references
+    global execution_thread
+    global proxy_server
+
     # retrieves the current configuration and tries to retrieve
     # the paths for the encryption (ssl) based connections
     config = get_config()
