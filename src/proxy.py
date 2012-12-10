@@ -79,6 +79,7 @@ class ConnectionHandler(threading.Thread):
 
         self.client = connection
         self.client_buffer = ""
+        self.target = None
         self.timeout = timeout
         self.current = current
 
@@ -98,9 +99,9 @@ class ConnectionHandler(threading.Thread):
         except BaseException, exception:
             self.client.send("Problem in routing - %s" % str(exception))
         else:
-            self.target.close()
+            if self.target: self.target.close()
         finally:
-            self.client.close()
+            if self.client: self.client.close()
 
     def get_base_header(self):
         while True:
