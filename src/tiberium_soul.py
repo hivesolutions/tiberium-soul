@@ -89,6 +89,7 @@ app.config["MAX_CONTENT_LENGTH"] = 1024 ** 3
 
 execution_thread = None
 proxy_server = None
+daemon = None
 
 quorum.load(
     app,
@@ -561,6 +562,10 @@ def cleanup_environment():
     # no need for duplicated operations (returns immediately)
     if CLEANUP: return
 
+    # in case the daemon mode is activated must stop it
+    # by stopping it (file removal)
+    daemon and daemon.stop()
+
     # stop the execution thread so that it's possible to
     # the process to return the calling
     execution_thread and execution_thread.stop()
@@ -650,11 +655,11 @@ if __name__ == "__main__":
     try: opts, args = getopt.getopt(sys.argv[1:], "d", ["daemon"])
     except getopt.GetoptError, err: sys.exit(2)
 
-    daemon = False
+    is_daemon = False
     for option, args in opts:
-        if option in ("-d", "--daemon"): daemon = True
+        if option in ("-d", "--daemon"): is_daemon = True
 
-    if daemon:
+    if is_daemon:
         daemon = TiberiumSoulDaemon()
         daemon.start()
     else:
