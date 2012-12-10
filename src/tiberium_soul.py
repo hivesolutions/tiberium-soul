@@ -38,11 +38,13 @@ __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
 import os
+import sys
 import json
 import time
 import flask
 import atexit
 import shutil
+import getopt
 
 import tiberium
 
@@ -84,6 +86,9 @@ HOOKS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "hooks")
 
 app = flask.Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 1024 ** 3
+
+execution_thread = None
+proxy_server = None
 
 quorum.load(
     app,
@@ -385,7 +390,6 @@ def handler_413(error):
 @app.errorhandler(BaseException)
 def handler_exception(error):
     import traceback
-    import sys
     print "Exception in user code:"
     print "-" * 60
     traceback.print_exc(file = sys.stdout)
@@ -549,9 +553,11 @@ def run():
 
 @atexit.register
 def cleanup_environment():
-    # references the cleanup variable as a global variable
+    # references the a series of variables as a global variables
     # avoids problems with forward references
     global CLEANUP
+    global execution_thread
+    global proxy_server
 
     # in case the cleanup operation has been already processed
     # no need for duplicated operations (returns immediately)
@@ -559,13 +565,13 @@ def cleanup_environment():
 
     # stop the execution thread so that it's possible to
     # the process to return the calling
-    execution_thread.stop()
-    execution_thread.join()
+    execution_thread and execution_thread.stop()
+    execution_thread and execution_thread.join()
 
     # stops the proxy server from executing, this should
     # take a while to take any effect (timeout value)
-    proxy_server.stop()
-    proxy_server.join()
+    proxy_server and proxy_server.stop()
+    proxy_server and proxy_server.join()
 
     # iterates over all the names pending in execution
     # and kill the executing processes, removing the
@@ -583,31 +589,70 @@ def cleanup_environment():
     # operations are immediately avoided
     CLEANUP = True
 
-# retrieves the current configuration and tries to retrieve
-# the paths for the encryption (ssl) based connections
-config = get_config()
-cert_path = config.get("cert_path", None)
-key_path = config.get("key_path", None)
+def start():
+    # retrieves the current configuration and tries to retrieve
+    # the paths for the encryption (ssl) based connections
+    config = get_config()
+    cert_path = config.get("cert_path", None)
+    key_path = config.get("key_path", None)
 
-# creates the proxy server with the reference to
-# the current state map to be used for the proxy
-# routing rules
-proxy_server = proxy.ProxyServer(
-    CURRENT,
-    cert_path = cert_path,
-    key_path = key_path
-)
-proxy_server.start()
+    # creates the proxy server with the reference to
+    # the current state map to be used for the proxy
+    # routing rules
+    proxy_server = proxy.ProxyServer(
+        CURRENT,
+        cert_path = cert_path,
+        key_path = key_path
+    )
+    proxy_server.start()
 
-# creates the thread that it's going to be used to
-# execute the various background tasks and starts
-# it, providing the mechanism for execution
-execution_thread = execution.ExecutionThread()
-execution_thread.start()
+    # creates the thread that it's going to be used to
+    # execute the various background tasks and starts
+    # it, providing the mechanism for execution
+    execution_thread = execution.ExecutionThread()
+    execution_thread.start()
 
-# redeploys the currently installed sun file so that
-# the system is restores to the actual state
-redeploy()
+    # redeploys the currently installed sun file so that
+    # the system is restores to the actual state
+    redeploy()
+
+    # starts the running of the process structure, this
+    # is the main entry point of the soul server
+    run()
+
+class TiberiumSoulDaemon(quorum.Daemon):
+    """
+    Daemon based class, responsible for the execution
+    of the tiberium soul process under daemon mode.
+    """
+
+    DAEMON_PID_FILE = "/var/run/tiberium_soul.pid"
+    """ The path to the daemon pid file to be used
+    in case the tiberium soul is run as a daemon """
+
+    def __init__(self, pid_file = None, stdin = "/dev/null",
+                 stdout = "/dev/null", stderr = "/dev/null"):
+        quorum.Daemon.__init__(
+            self,
+            pid_file or TiberiumSoulDaemon.DAEMON_PID_FILE,
+            stdin,
+            stdout,
+            stderr
+        )
+
+    def run(self):
+        start()
 
 if __name__ == "__main__":
-    run()
+    try: opts, args = getopt.getopt(sys.argv[1:], "d", ["daemon"])
+    except getopt.GetoptError, err: sys.exit(2)
+
+    daemon = False
+    for option, args in opts:
+        if option in ("-d", "--daemon"): daemon = True
+
+    if daemon:
+        daemon = TiberiumSoulDaemon()
+        daemon.start()
+    else:
+        start()
