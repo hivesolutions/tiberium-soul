@@ -143,24 +143,45 @@ class ConnectionHandler(threading.Thread):
         self._read_write()
 
     def method_others(self):
-        path = self.path or "/"
+        target, path = self._resolve_google()
+        self._connect_target(target)
 
+        self.target.send("%s %s %s\r\n" % (self.method, path, self.protocol) + self._client_buffer)
+        self.client_buffer = ""
+        self._read_write()
+
+    def _resolve_target(self):
+        # retrieves the reference to the storage engine
+        # consisting of a redis data source
         storage = quorum.get_redis()
 
+        # sets the path to the target connection as the
+        # "just" set path or the root value in case no
+        # value is set
+        path = self.path or "/"
+
+        # retrieves the host header value from the map
+        # or headers and tries to resolve it as an alias
+        # defaulting to the value itself then retrieves
+        # the first part of the resolved value as the name
+        # of the app to be used in connection
         host = self.headers.get("Host", DEFAULT_HOST)
         host = storage and storage.get("alias:" + host) or host
         host_s = host.split(".", 1)
         name = host_s[0]
 
+        # tries to retrieves the process information from the
+        # current (in memory) data structure, in case no process
+        # type is found raises an exception (no routing possible)
         process_t = self.current.get(name, None)
         if not process_t: raise RuntimeError("No process available for request (%s)" % name)
 
+        # unpacks the process tuple into the process temporary path
+        # and port information then uses it to construct the final
+        # target value for connection
         _process, _temp_path, port = process_t
-
-        self._connect_target("localhost:" + str(port))
-        self.target.send("%s %s %s\r\n" % (self.method, path, self.protocol) + self._client_buffer)
-        self.client_buffer = ""
-        self._read_write()
+        target = "localhost:" + str(port)
+        return target, path
 
     def _connect_target(self, host):
         # in case there's current an existing target connection
