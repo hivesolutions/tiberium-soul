@@ -50,7 +50,7 @@ BUFFER_SIZE = 4096
 """ The size of the buffer to be used in the various
 read and writes requests to be performed """
 
-AGENT = "Python Proxy/" + __version__
+AGENT = "Tiberium Proxy/" + __version__
 """ The agent string value to be used
 while serving the proxy requests """
 
