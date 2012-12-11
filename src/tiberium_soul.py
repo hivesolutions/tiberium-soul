@@ -42,6 +42,7 @@ import sys
 import json
 import time
 import flask
+import signal
 import atexit
 import shutil
 import getopt
@@ -604,8 +605,10 @@ def start():
     key_path = config.get("key_path", None)
 
     # registers the cleanup environment function to be executed
-    # once the environment exits
+    # once the environment exits and when the terminate signal
+    # is raised this ensures a correct cleanup
     atexit.register(cleanup_environment)
+    signal.signal(signal.SIGTERM, cleanup_environment)
 
     # creates the proxy server with the reference to
     # the current state map to be used for the proxy
