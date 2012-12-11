@@ -548,6 +548,10 @@ def run():
         port = port
     )
 
+    # starts the logging system for the current process, the
+    # logging file is chosen according to the operative system
+    quorum.start_log(app, "tiberium_soul.debug")
+
     # runs the cleanup environment state, to be able to
     # release all the currently allocated resources for
     # the current tiberium soul instance
