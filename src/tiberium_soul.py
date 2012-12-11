@@ -552,7 +552,6 @@ def run():
     # the current tiberium soul instance
     cleanup_environment()
 
-@atexit.register
 def cleanup_environment():
     # references the a series of variables as a global variables
     # avoids problems with forward references
@@ -603,6 +602,10 @@ def start():
     config = get_config()
     cert_path = config.get("cert_path", None)
     key_path = config.get("key_path", None)
+
+    # registers the cleanup environment function to be executed
+    # once the environment exits
+    atexit.register(cleanup_environment)
 
     # creates the proxy server with the reference to
     # the current state map to be used for the proxy
