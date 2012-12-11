@@ -592,6 +592,11 @@ def cleanup_environment():
     # operations are immediately avoided
     CLEANUP = True
 
+def cleanup_environment_s(signum, frame):
+    # calls the general purpose cleanup environment handler
+    # to proceed with the cleanup operations
+    cleanup_environment()
+
 def start():
     # references the a series of variables as a global variables
     # avoids problems with forward references
@@ -608,7 +613,7 @@ def start():
     # once the environment exits and when the terminate signal
     # is raised this ensures a correct cleanup
     atexit.register(cleanup_environment)
-    signal.signal(signal.SIGTERM, cleanup_environment)
+    signal.signal(signal.SIGTERM, cleanup_environment_s)
 
     # creates the proxy server with the reference to
     # the current state map to be used for the proxy
@@ -644,14 +649,25 @@ class TiberiumSoulDaemon(quorum.Daemon):
     """ The path to the daemon pid file to be used
     in case the tiberium soul is run as a daemon """
 
-    def __init__(self, pid_file = None, stdin = "/dev/null",
-                 stdout = "/dev/null", stderr = "/dev/null"):
+    DAEMON_STDIN = "/dev/null"
+    """ The path to the daemon file to be used as
+    the standard input during daemon execution """
+
+    DAEMON_STDOUT = "/var/log/tiberium_soul.log"
+    """ The path to the daemon file to be used as
+    the standard output during daemon execution """
+
+    DAEMON_STDERR = "/var/log/tiberium_soul.err"
+    """ The path to the daemon file to be used as
+    the standard error output during daemon execution """
+
+    def __init__(self, pid_file = None, stdin = None, stdout = None, stderr = None):
         quorum.Daemon.__init__(
             self,
             pid_file or TiberiumSoulDaemon.DAEMON_PID_FILE,
-            stdin,
-            stdout,
-            stderr
+            stdin or TiberiumSoulDaemon.DAEMON_STDIN,
+            stdout or TiberiumSoulDaemon.DAEMON_STDOUT,
+            stderr or TiberiumSoulDaemon.DAEMON_STDERR
         )
 
     def run(self):
@@ -668,6 +684,6 @@ if __name__ == "__main__":
 
     if is_daemon:
         daemon = TiberiumSoulDaemon()
-        daemon.start()
+        daemon.start(register = False)
     else:
         start()
