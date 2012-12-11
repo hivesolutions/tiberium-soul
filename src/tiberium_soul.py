@@ -323,6 +323,70 @@ def restart_app(id):
         flask.url_for("show_app", id = id)
     )
 
+@app.route("/apps/<id>/name", methods = ("POST",))
+def set_name_app(id):
+    # retrieves the app from the provided identifier
+    # value (this map will be updated)
+    app = get_app(id)
+
+    # retrieves the name value from the
+    # request to be used to set the new name
+    # in the app structure
+    name = flask.request.form["name"]
+    app["name"] = name
+
+    # runs the validation process on new app created
+    # structures (should meet the requirements)
+    errors, app_v = quorum.validate("app", object = app)
+    if errors:
+        return flask.render_template(
+            "app_edit.html.tpl",
+            link = "new_app",
+            app = app_v,
+            errors = errors
+        )
+
+    # saves the app back in the database to reflect
+    # the changes that were made
+    db = quorum.get_mongo_db()
+    db.apps.save(app)
+
+    return flask.redirect(
+        flask.url_for("edit_app", id = id)
+    )
+
+@app.route("/apps/<id>/description", methods = ("POST",))
+def set_description_app(id):
+    # retrieves the app from the provided identifier
+    # value (this map will be updated)
+    app = get_app(id)
+
+    # retrieves the description value from the
+    # request to be used to set the new description
+    # in the app structure
+    name = flask.request.form["description"]
+    app["description"] = name
+
+    # runs the validation process on new app created
+    # structures (should meet the requirements)
+    errors, app_v = quorum.validate("app", object = app)
+    if errors:
+        return flask.render_template(
+            "app_edit.html.tpl",
+            link = "new_app",
+            app = app_v,
+            errors = errors
+        )
+
+    # saves the app back in the database to reflect
+    # the changes that were made
+    db = quorum.get_mongo_db()
+    db.apps.save(app)
+
+    return flask.redirect(
+        flask.url_for("edit_app", id = id)
+    )
+
 @app.route("/apps/<id>/env", methods = ("POST",))
 def set_env_app(id):
     # retrieves the app from the provided identifier
@@ -335,6 +399,17 @@ def set_env_app(id):
     key = flask.request.form["key"]
     value = flask.request.form["value"]
     app["env"][key] = value
+
+    # runs the validation process on new app created
+    # structures (should meet the requirements)
+    errors, app_v = quorum.validate("app", object = app)
+    if errors:
+        return flask.render_template(
+            "app_edit.html.tpl",
+            link = "new_app",
+            app = app_v,
+            errors = errors
+        )
 
     # saves the app back in the database to reflect
     # the changes that were made
@@ -356,6 +431,17 @@ def set_alias_app(id):
     # adds it as an alias in the app
     alias = flask.request.form.get("alias", None)
     app["domains"].append(alias)
+
+    # runs the validation process on new app created
+    # structures (should meet the requirements)
+    errors, app_v = quorum.validate("app", object = app)
+    if errors:
+        return flask.render_template(
+            "app_edit.html.tpl",
+            link = "new_app",
+            app = app_v,
+            errors = errors
+        )
 
     # saves the app back in the database to reflect
     # the changes that were made
