@@ -97,7 +97,8 @@ class ConnectionHandler(threading.Thread):
                 elif self.method in ("OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE"):
                     self.method_others()
         except BaseException, exception:
-            self.client.send("Problem in routing - %s" % str(exception))
+            try: self.client.send("Problem in routing - %s" % str(exception))
+            except BaseException, exception: print >> sys.stderr, " [error] - %s" % str(exception)
         else:
             if self.target: self.target.close()
         finally:
@@ -294,15 +295,18 @@ class ProxyServer(threading.Thread):
             read, _write, _error = select.select(sockets, [], [], SELECT_TIMEOUT)
             if not read: continue
             for read_socket in read:
-                connection, address = read_socket.accept()
-                if read_socket == _socket_ssl: connection = ssl.wrap_socket(
-                    connection,
-                    server_side = True,
-                    certfile = cert_path,
-                    keyfile = key_path
-                )
-                _handler = handler(connection, address, timeout, self.current)
-                _handler.start()
+                try:
+                    connection, address = read_socket.accept()
+                    if read_socket == _socket_ssl: connection = ssl.wrap_socket(
+                        connection,
+                        server_side = True,
+                        certfile = cert_path,
+                        keyfile = key_path
+                    )
+                    _handler = handler(connection, address, timeout, self.current)
+                    _handler.start()
+                except BaseException, exception:
+                    print >> sys.stderr, " [error] - %s" % str(exception)
 
         # closes the service sockets as no more work is meant to be processed
         # (end of the proxy task) note that the ssl socket is only closed in
