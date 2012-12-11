@@ -95,7 +95,8 @@ daemon = None
 quorum.load(
     app,
     redis_session = True,
-    mongo_database = MONGO_DATABASE
+    mongo_database = MONGO_DATABASE,
+    name = "tiberium_soul.debug"
 )
 
 @app.route("/", methods = ("GET",))
@@ -527,10 +528,6 @@ def _get_execute_sun(name, file_path):
     return execute_sun
 
 def run():
-    # runs the loading of the quorum structures, this should
-    # delegate a series of setup operations to quorum
-    quorum.load(app, redis_session = True)
-
     # sets the debug control in the application
     # then checks the current environment variable
     # for the target port for execution (external)
