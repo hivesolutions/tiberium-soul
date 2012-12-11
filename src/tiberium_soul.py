@@ -140,6 +140,89 @@ def deploy():
     execution_thread.insert_work(current_time, execute_sun)
     return "success"
 
+@app.route("/apps/new", methods = ("GET",))
+def new_app():
+    return flask.render_template(
+        "app_new.html.tpl",
+        link = "new_app",
+        app = {},
+        errors = {}
+    )
+
+@app.route("/apps", methods = ("POST",))
+def create_app():
+    # runs the validation process on the various arguments
+    # provided to the app
+    errors, app = quorum.validate("app_new")
+    if errors:
+        return flask.render_template(
+            "app_new.html.tpl",
+            link = "new_app",
+            app = app,
+            errors = errors
+        )
+
+    # retrieves the name and the description attributes of
+    # the app to be used in the creation
+    name = flask.request.form.get("name", None)
+    description = flask.request.form.get("description", None)
+
+    # retrieves the current configuration structure to be able
+    # to retrieve a series of configuration attributes
+    config = get_config()
+    hostname = config.get("hostname", "repo.tiberium")
+    domain_suffix = config.get("domain_suffix", "tibapp")
+    user = config.get("user", "git")
+    group = config.get("group", "git")
+
+    # retrieves the directory used to store the repository
+    # for the various applications
+    repos_folder = get_repos_folder()
+
+    # creates the map containing the complete description of the
+    # app from the provided parameters and configuration
+    app = {
+        "id" : name,
+        "name" : name,
+        "description" : description,
+        "domain" : "%s.%s" % (name, domain_suffix),
+        "schema" : "http",
+        "git" : "git@%s:%s.git" % (hostname, name),
+        "env" : {},
+        "domains" : []
+    }
+
+    # retrieves the database and then saves the app in the
+    # correct collection
+    db = quorum.get_mongo_db()
+    db.apps.save(app)
+
+    # retrieves the (complete) repository path for the current app
+    # and creates the repository in it (uses tiberium)
+    repo_path = os.path.join(repos_folder, "%s.git" % name)
+    tiberium.create_repo(repo_path)
+
+    # retrieves the "proper" path to the hooks in the application
+    # to copy and change their permissions
+    hooks_path = os.path.join(repo_path, ".git", "hooks")
+
+    # lists the names of the various hook files and then copies
+    # each of them to the hooks folder of the application
+    names = os.listdir(HOOKS_FOLDER)
+    for _name in names:
+        file_path = os.path.join(HOOKS_FOLDER, _name)
+        target_path = os.path.join(hooks_path, _name)
+        shutil.copy(file_path, target_path)
+        os.chmod(target_path, 0755)
+
+    # changes the owner and group of the repository path (all the
+    # applications require the same user)
+    chown_r(repo_path, user, group)
+
+    return flask.redirect(
+        flask.url_for("show_app", id = name)
+    )
+
 @app.route("/apps", methods = ("GET",))
 def list_app():
     apps = get_apps()
@@ -238,76 +321,6 @@ def restart_app(id):
 
     return flask.redirect(
         flask.url_for("show_app", id = id)
-    )
-
-@app.route("/apps/new", methods = ("GET",))
-def new_app():
-    return flask.render_template(
-        "app_new.html.tpl",
-        link = "new_app"
-    )
-
-@app.route("/apps", methods = ("POST",))
-def create_app():
-    # retrieves the name and the description attributes of
-    # the app to be used in the creation
-    name = flask.request.form.get("name", None)
-    description = flask.request.form.get("description", None)
-
-    # retrieves the current configuration structure to be able
-    # to retrieve a series of configuration attributes
-    config = get_config()
-    hostname = config.get("hostname", "repo.tiberium")
-    domain_suffix = config.get("domain_suffix", "tibapp")
-    user = config.get("user", "git")
-    group = config.get("group", "git")
-
-    # retrieves the directory used to store the repository
-    # for the various applications
-    repos_folder = get_repos_folder()
-
-    # creates the map containing the complete description of the
-    # app from the provided parameters and configuration
-    app = {
-        "id" : name,
-        "name" : name,
-        "description" : description,
-        "domain" : "%s.%s" % (name, domain_suffix),
-        "schema" : "http",
-        "git" : "git@%s:%s.git" % (hostname, name),
-        "env" : {},
-        "domains" : []
-    }
-
-    # retrieves the database and then saves the app in the
-    # correct collection
-    db = quorum.get_mongo_db()
-    db.apps.save(app)
-
-    # retrieves the (complete) repository path for the current app
-    # and creates the repository in it (uses tiberium)
-    repo_path = os.path.join(repos_folder, "%s.git" % name)
-    tiberium.create_repo(repo_path)
-
-    # retrieves the "proper" path to the hooks in the application
-    # to copy and change their permissions
-    hooks_path = os.path.join(repo_path, ".git", "hooks")
-
-    # lists the names of the various hook files and then copies
-    # each of them to the hooks folder of the application
-    names = os.listdir(HOOKS_FOLDER)
-    for _name in names:
-        file_path = os.path.join(HOOKS_FOLDER, _name)
-        target_path = os.path.join(hooks_path, _name)
-        shutil.copy(file_path, target_path)
-        os.chmod(target_path, 0755)
-
-    # changes the owner and group of the repository path (all the
-    # applications require the same user)
-    chown_r(repo_path, user, group)
-
-    return flask.redirect(
-        flask.url_for("show_app", id = name)
     )
 
 @app.route("/apps/<id>/env", methods = ("POST",))
@@ -483,6 +496,21 @@ def chown(file_path, user, group):
     uid = pw_name.pw_uid
     gid = group_info.gr_gid
     os.chown(file_path, uid, gid) #@UndefinedVariable
+
+def _validate_app_new():
+    return [] + _validate_app()
+
+def _validate_app():
+    return [
+        quorum.not_null("name"),
+        quorum.not_empty("name"),
+        quorum.string_gt("name", 4),
+        quorum.string_lt("name", 20),
+        quorum.not_duplicate("name", "apps"),
+
+        quorum.validation.not_null("description"),
+        quorum.validation.not_empty("description"),
+    ]
 
 def _get_execute_sun(name, file_path):
     def execute_sun():

@@ -7,13 +7,15 @@
             <label>App Name</label>
         </div>
         <div class="input">
-            <input name="name" placeholder="eg: colony" />
+            <input class="text-field focus" name="name" placeholder="eg: colony" autocomplete="off" value="{{ app.name }}"
+                   data-error="{{ errors.name }}" />
         </div>
         <div class="label">
             <label>Description</label>
         </div>
         <div class="input">
-            <textarea name="description" placeholder="eg: some words about the app"></textarea>
+            <textarea class="text-field" name="description" placeholder="eg: some words about the app"
+                      data-error="{{ errors.description }}">{{ app.description }}</textarea>
         </div>
         <div class="quote">
             By clicking Submit Application, you agree to our Service Agreement and that you have
