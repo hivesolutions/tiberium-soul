@@ -13,7 +13,7 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/tiberium_soul.sh
 NAME=tiberium_soul
-DESC="handling agent"
+DESC="cloud platform agent"
 
 test -x $DAEMON || DAEMON=/usr/bin/tiberium_soul.sh
 test -x $DAEMON || DAEMON=/usr/local/bin/tiberium_soul.sh
