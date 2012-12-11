@@ -87,17 +87,16 @@ HOOKS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "hooks")
 
 app = flask.Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 1024 ** 3
-
-execution_thread = None
-proxy_server = None
-daemon = None
-
 quorum.load(
     app,
     redis_session = True,
     mongo_database = MONGO_DATABASE,
     name = "tiberium_soul.debug"
 )
+
+execution_thread = None
+proxy_server = None
+daemon = None
 
 @app.route("/", methods = ("GET",))
 @app.route("/index", methods = ("GET",))
