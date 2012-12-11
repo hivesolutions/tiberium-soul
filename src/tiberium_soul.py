@@ -562,9 +562,9 @@ def cleanup_environment():
     # no need for duplicated operations (returns immediately)
     if CLEANUP: return
 
-    # in case the daemon mode is activated must stop it
-    # by stopping it (file removal)
-    daemon and daemon.stop()
+    # in case the current execution was done inside a daemon
+    # process must try to run the cleanup operation in it
+    daemon and daemon.cleanup()
 
     # stop the execution thread so that it's possible to
     # the process to return the calling
@@ -649,7 +649,8 @@ class TiberiumSoulDaemon(quorum.Daemon):
         )
 
     def run(self):
-        start()
+        try: start()
+        finally: self.cleanup()
 
 if __name__ == "__main__":
     try: opts, args = getopt.getopt(sys.argv[1:], "d", ["daemon"])
