@@ -639,6 +639,22 @@ def start():
     # is the main entry point of the soul server
     run()
 
+def execute():
+    global daemon
+
+    try: opts, _args = getopt.getopt(sys.argv[1:], "d", ["daemon"])
+    except getopt.GetoptError: sys.exit(2)
+
+    is_daemon = False
+    for option, _args in opts:
+        if option in ("-d", "--daemon"): is_daemon = True
+
+    if is_daemon:
+        daemon = TiberiumSoulDaemon()
+        daemon.start(register = False)
+    else:
+        start()
+
 class TiberiumSoulDaemon(quorum.Daemon):
     """
     Daemon based class, responsible for the execution
@@ -675,15 +691,4 @@ class TiberiumSoulDaemon(quorum.Daemon):
         finally: self.cleanup()
 
 if __name__ == "__main__":
-    try: opts, args = getopt.getopt(sys.argv[1:], "d", ["daemon"])
-    except getopt.GetoptError, err: sys.exit(2)
-
-    is_daemon = False
-    for option, args in opts:
-        if option in ("-d", "--daemon"): is_daemon = True
-
-    if is_daemon:
-        daemon = TiberiumSoulDaemon()
-        daemon.start(register = False)
-    else:
-        start()
+    execute()

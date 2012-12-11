@@ -40,4 +40,4 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import tiberium_soul
 
 if __name__ == "__main__":
-    tiberium_soul.run()
+    tiberium_soul.execute()

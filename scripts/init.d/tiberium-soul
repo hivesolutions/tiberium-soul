@@ -34,14 +34,14 @@ case "$1" in
     stop)
         log_daemon_msg "Stopping $DESC" tiberium_soul
         start-stop-daemon --stop --quiet --retry 30 --pidfile /var/run/$NAME.pid \
-            --exec $DAEMON || true
+            || true
         log_end_msg 0
         ;;
 
     restart|force-reload)
         log_daemon_msg "Restarting $DESC" tiberium_soul
         start-stop-daemon --stop --quiet --retry 30 --pidfile \
-            /var/run/$NAME.pid --exec $DAEMON || true
+            /var/run/$NAME.pid || true
         start-stop-daemon --start --quiet --pidfile \
             /var/run/$NAME.pid --exec $DAEMON -- --daemon || true
         log_end_msg 0
