@@ -641,26 +641,11 @@ def _get_execute_sun(name, file_path):
     return execute_sun
 
 def run():
-    # sets the debug control in the application
-    # then checks the current environment variable
-    # for the target port for execution (external)
-    # and then start running it (continuous loop)
-    debug = os.environ.get("DEBUG", False) and True or False
-    reloader = os.environ.get("RELOADER", False) and True or False
-    port = int(os.environ.get("PORT", 5000))
+    # updates the current admin variable and then start
+    # the application's main loop using the quorum
+    # infra-structure (should block the call)
     CURRENT["admin"] = (None, None, port)
-    app.debug = debug
-    app.run(
-        use_debugger = debug,
-        debug = debug,
-        use_reloader = reloader,
-        host = "0.0.0.0",
-        port = port
-    )
-
-    # starts the logging system for the current process, the
-    # logging file is chosen according to the operative system
-    quorum.start_log(app, "tiberium_soul.debug")
+    quorum.run()
 
     # runs the cleanup environment state, to be able to
     # release all the currently allocated resources for
