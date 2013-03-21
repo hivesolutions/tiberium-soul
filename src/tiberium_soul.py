@@ -86,12 +86,12 @@ REPOS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "repos")
 HOOKS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "hooks")
 
 app = flask.Flask(__name__)
-app.config["MAX_CONTENT_LENGTH"] = 1024 ** 3
 quorum.load(
     app,
     redis_session = True,
     mongo_database = MONGO_DATABASE,
-    name = "tiberium_soul.debug"
+    name = "tiberium_soul.debug",
+    MAX_CONTENT_LENGTH = 1024 ** 3
 )
 
 execution_thread = None
