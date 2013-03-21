@@ -645,7 +645,7 @@ def run():
     # the application's main loop using the quorum
     # infra-structure (should block the call)
     CURRENT["admin"] = (None, None, port)
-    quorum.run()
+    quorum.run(server = "waitress")
 
     # runs the cleanup environment state, to be able to
     # release all the currently allocated resources for
