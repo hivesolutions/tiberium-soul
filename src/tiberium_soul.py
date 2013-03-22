@@ -40,7 +40,6 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import sys
 import json
-import time
 import flask
 import signal
 import atexit
@@ -51,7 +50,6 @@ import tiberium
 
 import proxy
 import quorum
-import execution
 
 CURRENT = {
 }
@@ -93,7 +91,6 @@ app = quorum.load(
     MAX_CONTENT_LENGTH = 1024 ** 3
 )
 
-execution_thread = None
 proxy_server = None
 daemon = None
 
@@ -131,12 +128,11 @@ def deploy():
     try: file.write(contents)
     finally: file.close()
 
-    # retrieves the current time (to insert the job immediately)
-    # and then retrieves the "clojure method" to be used in the
-    # execution (deployment) of the sun file
-    current_time = time.time()
+    # retrieves the "clojure method" to be used in the
+    # execution (deployment) of the sun file and uses it
+    # to execute the deployment of the application
     execute_sun = _get_execute_sun(name, file_path)
-    execution_thread.insert_work(current_time, execute_sun)
+    quorum.run_back(execute_sun)
     return "success"
 
 @app.route("/apps/new", methods = ("GET",))
@@ -311,12 +307,11 @@ def restart_app(id):
     # with the app with the provided id
     file_path = os.path.join(suns_folder, "%s.sun" % id)
 
-    # retrieves the current time (to insert the job immediately)
-    # and then retrieves the "clojure method" to be used in the
-    # execution (deployment) of the sun file
-    current_time = time.time()
+    # retrieves the "clojure method" to be used in the
+    # execution (restart) of the sun file and uses it
+    # to execute the restart of the application
     execute_sun = _get_execute_sun(id, file_path)
-    execution_thread.insert_work(current_time, execute_sun)
+    quorum.run_back(execute_sun)
 
     return flask.redirect(
         flask.url_for("show_app", id = id)
@@ -550,9 +545,8 @@ def redeploy():
 
         _name = name[:-4]
         file_path = os.path.join(suns_folder, "%s.sun" % _name)
-        current_time = time.time()
         execute_sun = _get_execute_sun(_name, file_path)
-        execution_thread.insert_work(current_time, execute_sun)
+        quorum.run_back(execute_sun)
 
 def chown_r(path, user, group):
     # in case the current operative system is
@@ -664,11 +658,6 @@ def cleanup_environment():
     # process must try to run the cleanup operation in it
     daemon and daemon.cleanup()
 
-    # stop the execution thread so that it's possible to
-    # the process to return the calling
-    execution_thread and execution_thread.stop()
-    execution_thread and execution_thread.join()
-
     # stops the proxy server from executing, this should
     # take a while to take any effect (timeout value)
     proxy_server and proxy_server.stop()
@@ -698,7 +687,6 @@ def cleanup_environment_s(signum, frame):
 def start():
     # references the a series of variables as a global variables
     # avoids problems with forward references
-    global execution_thread
     global proxy_server
 
     # retrieves the current configuration and tries to retrieve
@@ -722,12 +710,6 @@ def start():
         key_path = key_path
     )
     proxy_server.start()
-
-    # creates the thread that it's going to be used to
-    # execute the various background tasks and starts
-    # it, providing the mechanism for execution
-    execution_thread = execution.ExecutionThread()
-    execution_thread.start()
 
     # redeploys the currently installed sun file so that
     # the system is restores to the actual state
