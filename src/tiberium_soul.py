@@ -85,12 +85,11 @@ SUNS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "suns")
 REPOS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "repos")
 HOOKS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "hooks")
 
-app = flask.Flask(__name__)
-quorum.load(
-    app,
+app = quorum.load(
+    name = __name__,
     redis_session = True,
     mongo_database = MONGO_DATABASE,
-    name = "tiberium_soul.debug",
+    logger = "tiberium_soul.debug",
     MAX_CONTENT_LENGTH = 1024 ** 3
 )
 
