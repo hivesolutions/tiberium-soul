@@ -587,8 +587,8 @@ def _validate_app():
         quorum.string_lt("name", 20),
         quorum.not_duplicate("name", "apps"),
 
-        quorum.validation.not_null("description"),
-        quorum.validation.not_empty("description"),
+        quorum.not_null("description"),
+        quorum.not_empty("description"),
     ]
 
 def _get_execute_sun(name, file_path):
