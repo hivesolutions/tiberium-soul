@@ -84,8 +84,8 @@ form.line {
 
 .form.form-simple p {
     color: #888888;
-    font-size: 14px;
-    line-height: 18px;
+    font-size: 13px;
+    line-height: 20px;
     margin: 8px 0px 8px 0px;
     width: 200px;
 }
@@ -101,6 +101,9 @@ form.line {
     border-left: none;
     border-right: none;
     border-top: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
     font-size: 16px;
     height: 22px;
     padding: 8px 2px 0px 2px;
