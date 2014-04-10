@@ -148,7 +148,7 @@ def new_app():
 def create_app():
     # runs the validation process on the various arguments
     # provided to the app
-    errors, app = quorum.validate("app_new")
+    errors, app = quorum.validate(_validate_app_new)
     if errors:
         return flask.render_template(
             "app_new.html.tpl",
@@ -176,16 +176,16 @@ def create_app():
 
     # creates the map containing the complete description of the
     # app from the provided parameters and configuration
-    app = {
-        "id" : name,
-        "name" : name,
-        "description" : description,
-        "domain" : "%s.%s" % (name, domain_suffix),
-        "schema" : "http",
-        "git" : "git@%s:%s.git" % (hostname, name),
-        "env" : {},
-        "domains" : []
-    }
+    app = dict(
+        id = name,
+        name = name,
+        description = description,
+        domain = "%s.%s" % (name, domain_suffix),
+        schema = "http",
+        git = "git@%s:%s.git" % (hostname, name),
+        env = {},
+        domains = []
+    )
 
     # retrieves the database and then saves the app in the
     # correct collection
@@ -331,7 +331,7 @@ def set_name_app(id):
 
     # runs the validation process on new app created
     # structures (should meet the requirements)
-    errors, app_v = quorum.validate("app", object = app)
+    errors, app_v = quorum.validate(_validate_app, object = app)
     if errors:
         return flask.render_template(
             "app_edit.html.tpl",
@@ -363,7 +363,7 @@ def set_description_app(id):
 
     # runs the validation process on new app created
     # structures (should meet the requirements)
-    errors, app_v = quorum.validate("app", object = app)
+    errors, app_v = quorum.validate(_validate_app, object = app)
     if errors:
         return flask.render_template(
             "app_edit.html.tpl",
@@ -396,7 +396,7 @@ def set_env_app(id):
 
     # runs the validation process on new app created
     # structures (should meet the requirements)
-    errors, app_v = quorum.validate("app", object = app)
+    errors, app_v = quorum.validate(_validate_app, object = app)
     if errors:
         return flask.render_template(
             "app_edit.html.tpl",
@@ -428,7 +428,7 @@ def set_alias_app(id):
 
     # runs the validation process on new app created
     # structures (should meet the requirements)
-    errors, app_v = quorum.validate("app", object = app)
+    errors, app_v = quorum.validate(_validate_app, object = app)
     if errors:
         return flask.render_template(
             "app_edit.html.tpl",
