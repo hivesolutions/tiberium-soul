@@ -8,7 +8,7 @@
                 <label>Name</label>
             </dt>
             <dd>
-                <form action="{{ url_for('set_name_app', id = app.id) }}" method="post" class="line">
+                <form action="{{ url_for('set_name_app', id = app.id) }}" method="post" class="form line">
                     <input type="hidden" name="_id" value="{{ app._id }}" />
                     <input class="text-field" name="name" value="{{ app.name }}"
                            data-error="{{ errors.name }}" />
@@ -24,7 +24,7 @@
                 to identify the app from this small text</p>
             </dt>
             <dd>
-                <form action="{{ url_for('set_description_app', id = app.id) }}" method="post" class="line">
+                <form action="{{ url_for('set_description_app', id = app.id) }}" method="post" class="form line">
                     <input type="hidden" name="_id" value="{{ app._id }}" />
                     <input class="text-field" name="description" value="{{ app.description }}"
                            data-error="{{ errors.description }}" />
@@ -45,7 +45,7 @@
                     <span class="separator">=</span>
                     <input class="text-field small" name="key" value="{{ value }}" data-disabled="1" />
                 {% endfor %}
-                <form action="{{ url_for('set_env_app', id = app.id) }}" method="post" class="line">
+                <form action="{{ url_for('set_env_app', id = app.id) }}" method="post" class="form line">
                     <input type="hidden" name="_id" value="{{ app._id }}" />
                     <input class="text-field small" name="key" placeholder="key" data-error="{{ errors.key }}" />
                     <span class="separator">=</span>
@@ -70,7 +70,7 @@
                         <a href="http://{{ domain }}">{{ domain }}</a>
                     </div>
                 {% endfor %}
-                <form action="{{ url_for('set_alias_app', id = app.id) }}" method="post" class="line">
+                <form action="{{ url_for('set_alias_app', id = app.id) }}" method="post" class="form line">
                     <input type="hidden" name="_id" value="{{ app._id }}" />
                     <input class="text-field" name="alias" placeholder="colony.org" data-error="{{ errors.alias }}" />
                     <div class="button" data-submit="true">Add</div>

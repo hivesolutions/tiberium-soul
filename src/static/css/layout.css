@@ -139,9 +139,10 @@ form.line {
     color: #4d4d4d;
 }
 
-.form.form-simple > .submit-button {
+.form.form-simple .submit-button {
     height: 0px;
     width: 0px;
+    visibility: hidden;
 }
 
 .form.form-simple .separator {
