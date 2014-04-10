@@ -1,4 +1,7 @@
 *.pyc
+*.debug
+
+redis.shelve
 
 /dist
 /build
