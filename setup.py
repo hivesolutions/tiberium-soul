@@ -140,9 +140,6 @@ setuptools.setup(
         "scripts/pypi/tiberium_soul.bat",
         "scripts/pypi/tiberium_soul.sh"
     ],
-    packages = [
-        "quorum"
-    ],
     py_modules = [
         "tiberium_soul",
         "execution",
@@ -154,6 +151,7 @@ setuptools.setup(
     data_files = data_files,
     install_requires = [
         "flask",
+        "quorum",
         "tiberium"
     ],
     classifiers = [

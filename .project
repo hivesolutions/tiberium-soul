@@ -3,6 +3,7 @@
 	<name>tiberium_soul</name>
 	<comment></comment>
 	<projects>
+		<project>quorum</project>
 		<project>tiberium</project>
 	</projects>
 	<buildSpec>
