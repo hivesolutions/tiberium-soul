@@ -141,8 +141,8 @@ form.line {
 
 .form.form-simple .submit-button {
     height: 0px;
-    width: 0px;
     visibility: hidden;
+    width: 0px;
 }
 
 .form.form-simple .separator {
