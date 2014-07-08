@@ -143,7 +143,7 @@ class ConnectionHandler(threading.Thread):
         self._read_write()
 
     def method_others(self):
-        target, path = self._resolve_google()
+        target, path = self._resolve_target()
         self._connect_target(target)
 
         self.target.send("%s %s %s\r\n" % (self.method, path, self.protocol) + self._client_buffer)
