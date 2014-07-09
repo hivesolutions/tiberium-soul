@@ -10,6 +10,7 @@ HTTP related request from the client to the proper tiberium instance.
 * Optimization of resources (minimizing user cost)
 * SSH key upload to Digital Ocean for provisioning of VM via [API](https://developers.digitalocean.com/)
 * Sandboxing of execution using LLX containers through [Docker API](https://docs.docker.com/reference/api/docker_remote_api)
+* User managed proxy server (as opposed to the Heroku approach) with full SSH key support
 
 ## Configuration
 
