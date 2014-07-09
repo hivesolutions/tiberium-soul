@@ -8,7 +8,8 @@ HTTP related request from the client to the proper tiberium instance.
 * Modular back-end usage with support for Digital Ocean
 * Support for add-ons using env variables of heroku (eg: `MONGOHQ_URL`)
 * Optimization of resources (minimizing user cost)
-* SSH key upload to Digital Ocean for provisioning of VM
+* SSH key upload to Digital Ocean for provisioning of VM via [API](https://developers.digitalocean.com/)
+* Sandboxing of execution using LLX containers through [Docker API](https://docs.docker.com/reference/api/docker_remote_api)
 
 ## Configuration
 
