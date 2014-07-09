@@ -12,6 +12,8 @@ HTTP related request from the client to the proper tiberium instance.
 * Sandboxing of execution using LLX containers through [Docker API](https://docs.docker.com/reference/api/docker_remote_api)
 * User managed proxy server (as opposed to the Heroku approach) with full SSL key support
 * Possible manual management of infrastructure by the user (at his own risk)
+* Direct support for GitHub repositories (deploy using specialized branch)
+* One click configuration through OAuth login (in both Digital Ocean and GitHub)
 
 ## Configuration
 
