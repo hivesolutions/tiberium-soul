@@ -41,6 +41,11 @@ HTTP related request from the client to the proper tiberium instance.
 * [Mock 5](https://dribbble.com/shots/1625429-Helpdesk) - Design
 * [Dropbox](https://dribbble.com/dropbox) - Illustrations
 
+## Typefaces
+
+* [Avenir](http://en.wikipedia.org/wiki/Avenir_(typeface))
+* [Muli](http://www.google.com/fonts/specimen/Muli)
+
 ## Configuration
 
 This series of sets assume that the target machine is running Ubuntu Linux 12.10.
