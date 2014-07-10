@@ -38,7 +38,7 @@ HTTP related request from the client to the proper tiberium instance.
 * [Mock 2](https://dribbble.com/shots/1635231-Personal-Website-Redesign) - Design
 * [Mock 3](https://dribbble.com/shots/1636389-HelpDesk-WIP) - Typography
 * [Mock 4](https://dribbble.com/shots/1630145-Gmail-Redesign) - Design
-* [Mock 5](https://dribbble.com/shots/1625429-Helpdesk) - Design
+* [Mock 5](https://dribbble.com/shots/1625429-Helpdesk) - Design, Icons
 * [Mock 6](https://dribbble.com/shots/1603565-Groove-Helpdesk) - Design
 * [Mock 7](https://dribbble.com/shots/1608896-Community-webpage) - Design
 * [Mock 8](https://dribbble.com/shots/1616804-Businessworld-2) - Design
