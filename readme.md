@@ -14,7 +14,7 @@ HTTP related request from the client to the proper tiberium instance.
 * Possible manual management of infrastructure by the user (at his own risk)
 * Direct support for GitHub repositories (deploy using specialized branch)
 * One click configuration through OAuth login (in both Digital Ocean and GitHub)
-* Infra-structure for selling our own personal addons like a clone of [Parse](https://parse.com)
+* Infra-structure for selling our own (Hive Solutions) addons like a clone of [Parse](https://parse.com)
 
 ## Inspiration
 
