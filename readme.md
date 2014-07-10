@@ -50,6 +50,15 @@ HTTP related request from the client to the proper tiberium instance.
 * [Avenir](http://en.wikipedia.org/wiki/Avenir_(typeface))
 * [Muli](http://www.google.com/fonts/specimen/Muli)
 
+## Homepage
+
+* [Mock 1][https://dribbble.com/shots/1065238-Home-Page-Project-Gif] - Design, Size
+* [Dropbox][https://www.dropbox.com] - Design, Simplicity, Focus, Illustrations
+
+## Naming
+
+* 
+
 ## Configuration
 
 This series of sets assume that the target machine is running Ubuntu Linux 12.10.
