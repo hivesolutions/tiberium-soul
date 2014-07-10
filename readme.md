@@ -30,6 +30,7 @@ HTTP related request from the client to the proper tiberium instance.
 
 * [Dropbox](http://www.dropbox.com)
 * [Digital Ocean](https://www.digitalocean.com)
+* [MongoHQ](https://www.mongohq.com)
 
 ## Configuration
 
