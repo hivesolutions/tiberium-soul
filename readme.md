@@ -15,6 +15,11 @@ HTTP related request from the client to the proper tiberium instance.
 * Direct support for GitHub repositories (deploy using specialized branch)
 * One click configuration through OAuth login (in both Digital Ocean and GitHub)
 
+## Inspiration
+
+* [Heroku](http://www.heroku.com)
+* [Cloud66](http://www.cloud66.com)
+
 ## Configuration
 
 This series of sets assume that the target machine is running Ubuntu Linux 12.10.
