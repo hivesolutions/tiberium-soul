@@ -34,7 +34,9 @@ HTTP related request from the client to the proper tiberium instance.
 
 ### Mocks
 
-* [Mock 1](https://dribbble.com/shots/1635230-Tackkle-Dashboard-Freelancing-Tool-WIP/attachments/255440)
+* [Mock 1](https://dribbble.com/shots/1635230-Tackkle-Dashboard-Freelancing-Tool-WIP)
+* [Mock 2](https://dribbble.com/shots/1635231-Personal-Website-Redesign)
+* 
 
 ## Configuration
 
