@@ -19,6 +19,7 @@ HTTP related request from the client to the proper tiberium instance.
 
 * [Heroku](http://www.heroku.com)
 * [Cloud66](http://www.cloud66.com)
+* [Vagrant][http://www.vagrantup.com]
 
 ## Configuration
 
