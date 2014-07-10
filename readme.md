@@ -52,8 +52,8 @@ HTTP related request from the client to the proper tiberium instance.
 
 ## Homepage
 
-* [Mock 1][https://dribbble.com/shots/1065238-Home-Page-Project-Gif] - Design, Size
-* [Dropbox][https://www.dropbox.com] - Design, Simplicity, Focus, Illustrations
+* [Mock 1](https://dribbble.com/shots/1065238-Home-Page-Project-Gif) - Design, Size
+* [Dropbox](https://www.dropbox.com) - Design, Simplicity, Focus, Illustrations
 
 ## Naming
 
