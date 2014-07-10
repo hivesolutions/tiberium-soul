@@ -60,6 +60,11 @@ HTTP related request from the client to the proper tiberium instance.
 
 * Fanti
 * Jetopia
+* Ventogo - Domain
+* URriver - Domain
+* Panode
+
+http://www.helpnia.com/topics/top-6-web-2-0-name-generators
 
 ## Configuration
 
