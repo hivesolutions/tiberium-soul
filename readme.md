@@ -65,16 +65,16 @@ of `global/config.json`.
 
 An example configuration would be:
 
-	{
-	    "hostname" : "repo.hostname",
-	    "domain_suffix" : "hostname",
-    	    "user" : "git",
-    	    "group" : "git",
-    	    "cert_path" : "/etc/tiberium/cerfile.cer",
-    	    "key_path" : "/etc/tiberium/keyfile.key",
-    	    "suns_dir" : "/var/tiberium/suns",
-    	    "repos_dir" : "/var/tiberium/repos"
-	}
+    {
+        "hostname" : "repo.hostname",
+        "domain_suffix" : "hostname",
+    	"user" : "git",
+    	"group" : "git",
+    	"cert_path" : "/etc/tiberium/cerfile.cer",
+    	"key_path" : "/etc/tiberium/keyfile.key",
+    	"suns_dir" : "/var/tiberium/suns",
+    	"repos_dir" : "/var/tiberium/repos"
+    }
 
 ### Execution
 
