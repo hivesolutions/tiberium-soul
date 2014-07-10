@@ -18,11 +18,18 @@ HTTP related request from the client to the proper tiberium instance.
 
 ## Inspiration
 
+### Logics/Workflow
+
 * [Heroku](http://www.heroku.com)
 * [Cloud66](http://www.cloud66.com)
 * [Amazon Beanstalk](http://aws.amazon.com/elasticbeanstalk)
 * [Vagrant](http://www.vagrantup.com)
 * [Docker](https://www.docker.com)
+
+### UI/UX
+
+* [Dropbox](http://www.dropbox.com)
+* [Digital Ocean](https://www.digitalocean.com)
 
 ## Configuration
 
