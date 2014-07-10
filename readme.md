@@ -50,13 +50,13 @@ Optional/optimal dependencies include:
 In order to be able to run the deployment of the server using the "default" git user it
 must be created in the target machine.
 
-	$ adduser git
-	$ passwd git
-	$ usermod -d /usr/local/lib/python2.7/dist-packages/tiberium_soul-0.1.0-py2.7.egg/repos/ git
+    $ adduser git
+    $ passwd git
+    $ usermod -d /usr/local/lib/python2.7/dist-packages/tiberium_soul-0.1.0-py2.7.egg/repos/ git
 
 You can then verify the user information with.
 
-	$ finger git
+    $ finger git
 	
 ### Configuration
 
@@ -81,7 +81,7 @@ An example configuration would be:
 After correctly installing tiberium soul execute the following command to start the gateway
 and deployment infra-structures.
 
-	$ tiberium_soul.sh
+    $ tiberium_soul.sh
 
 ## Types of servers
 
@@ -96,4 +96,4 @@ and deployment infra-structures.
 If the configuration file for pypi (setup.py) is correctly defined and you ha ve the correct
 permission for it you may upload it to the python package index.
 
-	$ python setup.py sdist upload
+    $ python setup.py sdist upload
