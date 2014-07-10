@@ -5,15 +5,16 @@ HTTP related request from the client to the proper tiberium instance.
 ## Ideas
 
 * Full Heroku compatibility (eg: `Procfile`)
-* Modular back-end usage with support for Digital Ocean (in the future [EC2](http://aws.amazon.com/ec2/), [Azure](http://azure.microsoft.com/en-us/), etc.)
+* Modular back-end usage with support for Digital Ocean (in the future [EC2](http://aws.amazon.com/ec2), [Azure](http://azure.microsoft.com/en-us), etc.)
 * Support for add-ons using env variables of heroku (eg: `MONGOHQ_URL`)
 * Optimization of resources (minimizing user cost)
-* SSH key upload to Digital Ocean for provisioning of VM via [API](https://developers.digitalocean.com/)
+* SSH key upload to Digital Ocean for provisioning of VM via [API](https://developers.digitalocean.com)
 * Sandboxing of execution using LLX containers through [Docker API](https://docs.docker.com/reference/api/docker_remote_api)
 * User managed proxy server (as opposed to the Heroku approach) with full SSL key support
 * Possible manual management of infrastructure by the user (at his own risk)
 * Direct support for GitHub repositories (deploy using specialized branch)
 * One click configuration through OAuth login (in both Digital Ocean and GitHub)
+* Infra-structure for selling our own personal addons like a clone of [Parse](https://parse.com)
 
 ## Inspiration
 
