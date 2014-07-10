@@ -54,10 +54,12 @@ HTTP related request from the client to the proper tiberium instance.
 
 * [Mock 1](https://dribbble.com/shots/1065238-Home-Page-Project-Gif) - Design, Size
 * [Dropbox](https://www.dropbox.com) - Design, Simplicity, Focus, Illustrations
+* [Heroku](https://www.heroku.com) - Design, Focus, Code Example
 
 ## Naming
 
-* 
+* Fanti
+* Jetopia
 
 ## Configuration
 
