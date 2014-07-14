@@ -275,7 +275,7 @@ class ProxyServer(threading.Thread):
         host = "0.0.0.0",
         port = 80,
         port_ssl = 443,
-        use_ssl = True, 
+        use_ssl = True,
         cert_path = None,
         key_path = None,
         timeout = 60,
