@@ -1,4 +1,5 @@
-# [Tiberium Soul Server](http://tiberiumapp.com)
+# [Tiberium Soul](http://tiberium_soul.hive.pt)
+
 The Tiberium Soul server is the "heart" of the tiberium system it's responsible for the forwarding of the various
 HTTP related request from the client to the proper tiberium instance. 
 
