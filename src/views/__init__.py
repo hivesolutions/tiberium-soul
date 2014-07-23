@@ -19,9 +19,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Hive Tiberium System. If not, see <http://www.gnu.org/licenses/>.
 
-__author__ = "João Magalhães <joamag@hive.pt>"
-""" The author(s) of the module """
-
 __version__ = "1.0.0"
 """ The version of the module """
 
@@ -37,23 +34,8 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import flask #@UnusedImport
+from . import api
+from . import web
 
-import quorum
-
-MONGO_DATABASE = "tiberium_soul"
-""" The default database to be used for the connection with
-the mongo database """
-
-app = quorum.load(
-    name = __name__,
-    redis_session = True,
-    mongo_database = MONGO_DATABASE,
-    logger = "tiberium_soul.debug",
-    MAX_CONTENT_LENGTH = 1024 ** 3
-)
-
-from views import * #@UnusedWildImport
-
-if __name__ == "__main__":
-    quorum.run(server = "waitress")
+from .api import *
+from .web import *

@@ -37,23 +37,19 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-import flask #@UnusedImport
-
 import quorum
 
-MONGO_DATABASE = "tiberium_soul"
-""" The default database to be used for the connection with
-the mongo database """
+def validate_app_new():
+    return [] + validate_app()
 
-app = quorum.load(
-    name = __name__,
-    redis_session = True,
-    mongo_database = MONGO_DATABASE,
-    logger = "tiberium_soul.debug",
-    MAX_CONTENT_LENGTH = 1024 ** 3
-)
+def validate_app():
+    return [
+        quorum.not_null("name"),
+        quorum.not_empty("name"),
+        quorum.string_gt("name", 4),
+        quorum.string_lt("name", 20),
+        quorum.not_duplicate("name", "apps"),
 
-from views import * #@UnusedWildImport
-
-if __name__ == "__main__":
-    quorum.run(server = "waitress")
+        quorum.not_null("description"),
+        quorum.not_empty("description"),
+    ]
