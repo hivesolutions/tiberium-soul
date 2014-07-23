@@ -84,14 +84,14 @@ form.line {
 
 .form.form-simple p {
     color: #888888;
-    font-size: 13px;
+    font-size: 12px;
     line-height: 20px;
     margin: 8px 0px 8px 0px;
     width: 200px;
 }
 
 .form.form-simple label {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
 }
 
@@ -107,7 +107,7 @@ form.line {
     font-size: 14px;
     height: 22px;
     padding: 8px 2px 0px 2px;
-    width: 210px;
+    width: 320px;
 }
 
 .form.form-simple input.small {
@@ -127,7 +127,7 @@ form.line {
     border: 1px solid #e0e0e0;
     border-radius: 4px 4px 4px 4px;
     color: #888888;
-    font-size: 13px;
+    font-size: 12px;
     margin: 16px 0px 16px 0px;
     padding: 6px 6px 6px 6px;
     text-align: center;
