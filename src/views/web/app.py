@@ -72,8 +72,8 @@ def create_app():
 
     # retrieves the name and the description attributes of
     # the app to be used in the creation
-    name = flask.request.form.get("name", None)
-    description = flask.request.form.get("description", None)
+    name = quorum.get_field("name", None)
+    description = quorum.get_field("description", None)
 
     # retrieves the current configuration structure to be able
     # to retrieve a series of configuration attributes
@@ -239,7 +239,7 @@ def set_name_app(id):
     # retrieves the name value from the
     # request to be used to set the new name
     # in the app structure
-    name = flask.request.form["name"]
+    name = quorum.get_field("name")
     app["name"] = name
 
     # runs the validation process on new app created
@@ -271,7 +271,7 @@ def set_description_app(id):
     # retrieves the description value from the
     # request to be used to set the new description
     # in the app structure
-    name = flask.request.form["description"]
+    name = quorum.get_field("description")
     app["description"] = name
 
     # runs the validation process on new app created
@@ -303,8 +303,8 @@ def set_env_app(id):
     # retrieves the key and value values from the
     # request to be used to set the new environment
     # variable for the app
-    key = flask.request.form["key"]
-    value = flask.request.form["value"]
+    key = quorum.get_field("key")
+    value = quorum.get_field("value")
     app["env"][key] = value
 
     # runs the validation process on new app created
@@ -336,7 +336,7 @@ def set_alias_app(id):
 
     # retrieves the alias sent by the post value
     # adds it as an alias in the app
-    alias = flask.request.form.get("alias", None)
+    alias = quorum.get_field("alias", None)
     app["domains"].append(alias)
 
     # runs the validation process on new app created

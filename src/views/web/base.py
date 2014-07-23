@@ -65,8 +65,8 @@ def about():
 def deploy():
     # retrieves the name of the sun file to be deployed
     # and the contents of the file to be deployed
-    name = flask.request.form["name"]
-    file = flask.request.files["file"]
+    name = quorum.get_field("name")
+    file = quorum.get_field("file")
 
     # retrieves the directory to be used as the
     # based for the sun files
