@@ -138,7 +138,7 @@ def deploy():
 @app.route("/apps/new", methods = ("GET",))
 def new_app():
     return flask.render_template(
-        "app_new.html.tpl",
+        "app/new.html.tpl",
         link = "new_app",
         app = {},
         errors = {}
@@ -151,7 +151,7 @@ def create_app():
     errors, app = quorum.validate(_validate_app_new)
     if errors:
         return flask.render_template(
-            "app_new.html.tpl",
+            "app/new.html.tpl",
             link = "new_app",
             app = app,
             errors = errors
@@ -208,7 +208,7 @@ def create_app():
         file_path = os.path.join(HOOKS_FOLDER, _name)
         target_path = os.path.join(hooks_path, _name)
         shutil.copy(file_path, target_path)
-        os.chmod(target_path, 0755)
+        os.chmod(target_path, 0x1ed)
 
     # changes the owner and group of the repository path (all the
     # applications require the same user)
@@ -223,7 +223,7 @@ def list_app():
     apps = get_apps()
 
     return flask.render_template(
-        "app_list.html.tpl",
+        "app/list.html.tpl",
         link = "apps",
         apps = apps
     )
@@ -232,7 +232,7 @@ def list_app():
 def show_app(id):
     app = get_app(id)
     return flask.render_template(
-        "app_show.html.tpl",
+        "app/show.html.tpl",
         link = "apps",
         sub_link = "info",
         app = app
@@ -242,7 +242,7 @@ def show_app(id):
 def edit_app(id):
     app = get_app(id)
     return flask.render_template(
-        "app_edit.html.tpl",
+        "app/edit.html.tpl",
         link = "apps",
         sub_link = "edit",
         app = app,
@@ -253,7 +253,7 @@ def edit_app(id):
 def delete_app_c(id):
     app = get_app(id)
     return flask.render_template(
-        "app_delete.html.tpl",
+        "app/delete.html.tpl",
         link = "apps",
         sub_link = "delete",
         app = app,
@@ -291,7 +291,7 @@ def delete_app(id):
 def help_app(id):
     app = get_app(id)
     return flask.render_template(
-        "app_help.html.tpl",
+        "app/help.html.tpl",
         link = "apps",
         sub_link = "help",
         app = app
@@ -334,7 +334,7 @@ def set_name_app(id):
     errors, app_v = quorum.validate(_validate_app, object = app)
     if errors:
         return flask.render_template(
-            "app_edit.html.tpl",
+            "app/edit.html.tpl",
             link = "new_app",
             app = app_v,
             errors = errors
@@ -366,7 +366,7 @@ def set_description_app(id):
     errors, app_v = quorum.validate(_validate_app, object = app)
     if errors:
         return flask.render_template(
-            "app_edit.html.tpl",
+            "app/edit.html.tpl",
             link = "new_app",
             app = app_v,
             errors = errors
@@ -399,7 +399,7 @@ def set_env_app(id):
     errors, app_v = quorum.validate(_validate_app, object = app)
     if errors:
         return flask.render_template(
-            "app_edit.html.tpl",
+            "app/edit.html.tpl",
             link = "new_app",
             app = app_v,
             errors = errors
@@ -431,7 +431,7 @@ def set_alias_app(id):
     errors, app_v = quorum.validate(_validate_app, object = app)
     if errors:
         return flask.render_template(
-            "app_edit.html.tpl",
+            "app/edit.html.tpl",
             link = "new_app",
             app = app_v,
             errors = errors
@@ -485,10 +485,10 @@ def handler_413(error):
 @app.errorhandler(BaseException)
 def handler_exception(error):
     import traceback
-    print "Exception in user code:"
-    print "-" * 60
+    print("Exception in user code:")
+    print("-" * 60)
     traceback.print_exc(file = sys.stdout)
-    print "-" * 60
+    print("-" * 60)
     return str(error)
 
 def get_config():
