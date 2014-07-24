@@ -65,13 +65,12 @@ CONFIG_PATHS = (
 """ The various config paths to be searched before using
 the default config file """
 
-CURRENT_DIRECTORY = os.path.dirname(__file__)
-CURRENT_DIRECTORY_ABS = os.path.abspath(CURRENT_DIRECTORY)
-GLOBAL_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "global")
-TEMP_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "tmp")
-SUNS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "suns")
-REPOS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "repos")
-HOOKS_FOLDER = os.path.join(CURRENT_DIRECTORY_ABS, "hooks")
+CURRENT_FOLDER = os.path.abspath(".")
+GLOBAL_FOLDER = os.path.join(CURRENT_FOLDER, "global")
+TEMP_FOLDER = os.path.join(CURRENT_FOLDER, "tmp")
+SUNS_FOLDER = os.path.join(CURRENT_FOLDER, "suns")
+REPOS_FOLDER = os.path.join(CURRENT_FOLDER, "repos")
+HOOKS_FOLDER = os.path.join(CURRENT_FOLDER, "hooks")
 
 def get_config():
     # sets the initial config path as unset then iterates
