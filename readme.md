@@ -19,6 +19,10 @@ HTTP related request from the client to the proper tiberium instance.
 
 ## Inspiration
 
+### Technology
+
+* [AppScale](https://github.com/AppScale)
+
 ### Logics/Workflow
 
 * [Heroku](http://www.heroku.com)
