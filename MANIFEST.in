@@ -1,9 +1,12 @@
-include src/repos/README.md
-include src/suns/README.md
-include src/tmp/README.md
-recursive-include scripts *
-recursive-include src/cert *
-recursive-include src/global *
-recursive-include src/hooks *
-recursive-include src/static *
-recursive-include src/templates *
+include src/tiberium_soul/repos/readme.md
+include src/tiberium_soul/suns/readme.md
+include src/tiberium_soul/tmp/readme.md
+recursive-include src/tiberium_soul/cert *
+recursive-include src/tiberium_soul/global *
+recursive-include src/tiberium_soul/hooks *
+recursive-include src/tiberium_soul/static/css *
+recursive-include src/tiberium_soul/static/images *
+recursive-include src/tiberium_soul/static/js *
+recursive-include src/tiberium_soul/templates *
+recursive-include src/tiberium_soul/templates/app *
+recursive-include src/tiberium_soul/templates/partials *
