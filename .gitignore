@@ -1,7 +1,7 @@
 *.pyc
 *.debug
 
-redis.shelve
+redis.shelve*
 
 /dist
 /build
