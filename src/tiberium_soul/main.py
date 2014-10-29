@@ -53,7 +53,7 @@ app = quorum.load(
     MAX_CONTENT_LENGTH = 1024 ** 3
 )
 
-from views import * #@UnusedWildImport
+import tiberium_soul.views #@UnusedImport
 
 if __name__ == "__main__":
     quorum.run(server = "netius")

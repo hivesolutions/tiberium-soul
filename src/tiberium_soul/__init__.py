@@ -41,5 +41,5 @@ from . import proxy
 
 from .util import *
 from .views import *
-from .main import app, flask, quorum
+from .main import app
 from .proxy import ConnectionHandler, ProxyServer
