@@ -77,8 +77,8 @@ setuptools.setup(
             "static/images/*",
             "static/js/*",
             "templates/*.tpl",
-            "templates/app/*",
-            "templates/partials/*"
+            "templates/app/*.tpl",
+            "templates/partials/*.tpl"
         ]
     },
     entry_points = {
