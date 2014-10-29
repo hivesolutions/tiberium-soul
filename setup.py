@@ -50,10 +50,12 @@ setuptools.setup(
     keywords = "tiberium soul platform service",
     url = "http://tiberium_soul.hive.pt",
     zip_safe = False,
-    py_modules = [
+    packages = [
         "tiberium_soul",
-        "execution",
-        "proxy"
+        "tiberium_soul.util",
+        "tiberium_soul.views",
+        "tiberium_soul.views.api",
+        "tiberium_soul.views.web"
     ],
     package_dir = {
         "" : os.path.normpath("src")
