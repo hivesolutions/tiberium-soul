@@ -133,13 +133,7 @@ setuptools.setup(
     description = "Tiberium Soul System",
     license = "GNU General Public License (GPL), Version 3",
     keywords = "tiberium soul platform service",
-    url = "http://tiberium.com",
-    zip_safe = False,
-    scripts = [
-        "scripts/pypi/tiberium_soul_pypi.py",
-        "scripts/pypi/tiberium_soul.bat",
-        "scripts/pypi/tiberium_soul.sh"
-    ],
+    url = "http://tiberium_soul.hive.pt",
     py_modules = [
         "tiberium_soul",
         "execution",
@@ -154,6 +148,11 @@ setuptools.setup(
         "quorum",
         "tiberium"
     ],
+    entry_points = {
+        "console_scripts" : [
+            "toberium_soul = toberium_soul:execute"
+        ]
+    },
     classifiers = [
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
