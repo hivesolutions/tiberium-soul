@@ -40,12 +40,12 @@ __license__ = "GNU General Public License (GPL), Version 3"
 import os
 import shutil
 
+import flask
+import quorum
 import tiberium
 
-from tiberium_soul import app
 from tiberium_soul import util
-from tiberium_soul import flask
-from tiberium_soul import quorum
+from tiberium_soul.main import app
 
 @app.route("/apps/new", methods = ("GET",))
 def new_app():
