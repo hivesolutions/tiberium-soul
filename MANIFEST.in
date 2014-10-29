@@ -8,5 +8,3 @@ recursive-include src/tiberium_soul/static/css *
 recursive-include src/tiberium_soul/static/images *
 recursive-include src/tiberium_soul/static/js *
 recursive-include src/tiberium_soul/templates *
-recursive-include src/tiberium_soul/templates/app *
-recursive-include src/tiberium_soul/templates/partials *
