@@ -83,7 +83,7 @@ setuptools.setup(
     },
     entry_points = {
         "console_scripts" : [
-            "tiberium_soul = tiberium_soul:execute"
+            "tiberium_soul = tiberium_soul.run:execute"
         ]
     },
     classifiers = [
