@@ -87,7 +87,7 @@ setuptools.setup(
         ]
     },
     classifiers = [
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
         "Topic :: Utilities",
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Operating System :: OS Independent",
