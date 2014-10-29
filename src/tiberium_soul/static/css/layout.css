@@ -1,0 +1,156 @@
+@charset "utf-8";
+
+/*
+ Hive Concordia System
+ Copyright (C) 2008-2014 Hive Solutions Lda.
+
+ This file is part of Hive Concordia System.
+
+ Hive Concordia System is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Hive Concordia System is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Hive Concordia System. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/*
+ __author__    = João Magalhães <joamag@hive.pt>
+ __version__   = 1.0.0
+ __revision__  = $LastChangedRevision$
+ __date__      = $LastChangedDate$
+ __copyright__ = Copyright (c) 2008-2014 Hive Solutions Lda.
+ __license__   = GNU General Public License (GPL), Version 3
+*/
+
+.footer-logo {
+    background-image: url(../images/logo-footer.png);
+}
+
+form.line {
+    margin: 0px 0px 0px 0px;
+    width: auto;
+}
+
+.commands {
+    background-color: #f6f6f6;
+    color: #4d4d4d;
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 22px;
+    margin: 20px auto 20px auto;
+    padding: 8px 12px 8px 12px;
+    text-align: left;
+    width: 420px;
+}
+
+.box {
+    border: 1px dashed #e0e0e0;
+    padding-bottom: 18px;
+}
+
+.form.form-simple {
+    margin: 46px auto 46px auto;
+}
+
+.form.form-simple dl {
+    border-bottom: 1px solid #f0f0f0;
+    margin: 0px 0px 0px 0px;
+    padding: 18px 0px 18px 0px;
+    text-align: left;
+}
+
+.form.form-simple dl:first-child {
+    padding-top: 0px;
+}
+
+.form.form-simple dl > dt {
+    float: left;
+    margin: 14px 0px 0px 0px;
+    width: 46%;
+}
+
+.form.form-simple dl > dd {
+    float: right;
+    margin: 0px 0px 0px 0px;
+    width: 54%;
+}
+
+.form.form-simple p {
+    color: #888888;
+    font-size: 12px;
+    line-height: 20px;
+    margin: 8px 0px 8px 0px;
+    width: 200px;
+}
+
+.form.form-simple label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.form.form-simple input {
+    background-color: transparent;
+    border-bottom: 1px dashed #bbbbbb;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    font-size: 14px;
+    height: 22px;
+    padding: 8px 2px 0px 2px;
+    width: 320px;
+}
+
+.form.form-simple input.small {
+    width: 140px;
+}
+
+.form.form-simple input.disabled {
+    border-bottom: none;
+    opacity: 1.0;
+}
+
+.form.form-simple textarea {
+    background-color: transparent;
+}
+
+.form.form-simple .button {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px 4px 4px 4px;
+    color: #888888;
+    font-size: 12px;
+    margin: 16px 0px 16px 0px;
+    padding: 6px 6px 6px 6px;
+    text-align: center;
+    width: 120px;
+}
+
+.form.form-simple .button:hover {
+    border-color: #999999;
+    color: #4d4d4d;
+}
+
+.form.form-simple .submit-button {
+    height: 0px;
+    visibility: hidden;
+    width: 0px;
+}
+
+.form.form-simple .separator {
+    margin: 0px 12px 0px 12px;
+}
+
+.form.form-simple .link {
+    height: 22px;
+    padding: 7px 2px 5px 2px;
+    vertical-align: middle;
+}

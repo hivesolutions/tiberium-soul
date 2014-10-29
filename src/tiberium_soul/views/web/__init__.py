@@ -34,12 +34,10 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
-from . import util
-from . import views
-from . import main
-from . import proxy
+from . import app
+from . import base
 
-from .util import *
-from .views import *
-from .main import app, flask, quorum
-from .proxy import ConnectionHandler, ProxyServer
+from .app import new_app, create_app, list_app, show_app, edit_app, delete_app_c,\
+    delete_app, help_app, restart_app, set_name_app, set_description_app, set_env_app,\
+    set_alias_app, unset_alias_app
+from .base import index, about, deploy, handler_404, handler_413, handler_exception

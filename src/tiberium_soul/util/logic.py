@@ -192,7 +192,7 @@ def get_execute_sun(name, file_path):
         # object describing the "just" created process
         # for the sun file execution, this value will be
         # saved in the current map for future process actions
-        process, temp_path = tiberium.execute_sun(
+        process, temp_path = tiberium.run_sun(
             file_path, temp_path = temp_path, env = env, sync = False
         )
         CURRENT[name] = (process, temp_path, port)

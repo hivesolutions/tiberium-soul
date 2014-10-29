@@ -37,5 +37,6 @@ __license__ = "GNU General Public License (GPL), Version 3"
 from . import logic
 from . import model
 
-from .logic import *
-from .model import *
+from .logic import SUNS_FOLDER, REPOS_FOLDER, HOOKS_FOLDER, get_config, get_suns_folder,\
+    get_repos_folder, get_apps, get_app, redeploy, chown_r, chown, get_execute_sun
+from .model import validate_app_new, validate_app
