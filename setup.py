@@ -39,7 +39,7 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 setuptools.setup(
     name = "tiberium_soul",
-    version = "0.1.0",
+    version = "0.1.1",
     author = "Hive Solutions Lda.",
     author_email = "development@hive.pt",
     description = "Tiberium Soul System",
