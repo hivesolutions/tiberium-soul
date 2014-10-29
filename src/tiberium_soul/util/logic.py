@@ -45,6 +45,8 @@ import tiberium
 
 import quorum
 
+import tiberium_soul
+
 CURRENT = {
 }
 """ The base of the map that will hold the various state
@@ -65,7 +67,9 @@ CONFIG_PATHS = (
 """ The various config paths to be searched before using
 the default config file """
 
-CURRENT_FOLDER = os.path.abspath(".")
+ROOT_PATH = path = os.path.dirname(tiberium_soul.__file__)
+BASE_FOLDER = "." if os.path.exists("global") else ROOT_PATH
+CURRENT_FOLDER = os.path.abspath(BASE_FOLDER)
 GLOBAL_FOLDER = os.path.join(CURRENT_FOLDER, "global")
 TEMP_FOLDER = os.path.join(CURRENT_FOLDER, "tmp")
 SUNS_FOLDER = os.path.join(CURRENT_FOLDER, "suns")

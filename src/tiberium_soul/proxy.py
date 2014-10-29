@@ -96,9 +96,9 @@ class ConnectionHandler(threading.Thread):
                     self.method_CONNECT()
                 elif self.method in ("OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE"):
                     self.method_others()
-        except BaseException, exception:
+        except BaseException as exception:
             try: self.client.send("Problem in routing - %s" % str(exception))
-            except BaseException, exception: print >> sys.stderr, " [error] - %s" % str(exception)
+            except BaseException as exception: print >> sys.stderr, " [error] - %s" % str(exception)
         else:
             if self.target: self.target.close()
         finally:
@@ -336,7 +336,7 @@ class ProxyServer(threading.Thread):
                     )
                     _handler = handler(connection, address, timeout, self.current)
                     _handler.start()
-                except BaseException, exception:
+                except BaseException as exception:
                     print >> sys.stderr, " [error] - %s" % str(exception)
 
         # closes the service sockets as no more work is meant to be processed
