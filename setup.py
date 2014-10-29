@@ -37,6 +37,9 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import os
+import setuptools
+
 setuptools.setup(
     name = "tiberium_soul",
     version = "0.1.1",
@@ -55,7 +58,6 @@ setuptools.setup(
     package_dir = {
         "" : os.path.normpath("src")
     },
-    data_files = data_files,
     install_requires = [
         "flask",
         "quorum",
@@ -79,7 +81,7 @@ setuptools.setup(
     },
     entry_points = {
         "console_scripts" : [
-            "toberium_soul = toberium_soul:execute"
+            "tiberium_soul = tiberium_soul:execute"
         ]
     },
     classifiers = [
