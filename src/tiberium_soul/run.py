@@ -37,10 +37,18 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import os
+
 from tiberium_soul.main import quorum
 
 def main():
-    quorum.run(server = "netius")
+    path = os.path.dirname(__file__)
+    _path = os.getcwd()
+    try:
+        os.chdir(path)
+        quorum.run(server = "netius")
+    finally:
+        os.chdir(_path)
 
 if __name__ == "__main__":
     main()
