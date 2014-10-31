@@ -41,6 +41,7 @@ import os
 import sys
 
 from tiberium_soul import util
+
 from tiberium_soul.main import app
 from tiberium_soul.main import flask
 from tiberium_soul.main import quorum
