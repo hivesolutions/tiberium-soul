@@ -1,7 +1,7 @@
 # [Tiberium Soul](http://tiberium_soul.hive.pt)
 
 The Tiberium Soul server is the "heart" of the tiberium system it's responsible for the forwarding of the various
-HTTP related request from the client to the proper tiberium instance. 
+HTTP related request from the client to the proper tiberium instance.
 
 ## Ideas
 
@@ -110,7 +110,7 @@ must be created in the target machine.
 You can then verify the user information with.
 
     $ finger git
-	
+
 ### Configuration
 
 In order to configure tiberium create an `/etc/tiberium/config.json` file with the contents
@@ -121,12 +121,12 @@ An example configuration would be:
     {
         "hostname" : "repo.hostname",
         "domain_suffix" : "hostname",
-    	"user" : "git",
-    	"group" : "git",
-    	"cert_path" : "/etc/tiberium/cerfile.cer",
-    	"key_path" : "/etc/tiberium/keyfile.key",
-    	"suns_dir" : "/var/tiberium/suns",
-    	"repos_dir" : "/var/tiberium/repos"
+        "user" : "git",
+        "group" : "git",
+        "cert_path" : "/etc/tiberium/cerfile.cer",
+        "key_path" : "/etc/tiberium/keyfile.key",
+        "suns_dir" : "/var/tiberium/suns",
+        "repos_dir" : "/var/tiberium/repos"
     }
 
 ### Execution
