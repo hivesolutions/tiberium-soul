@@ -1,6 +1,6 @@
-include src/tiberium_soul/repos/readme.md
-include src/tiberium_soul/suns/readme.md
-include src/tiberium_soul/tmp/readme.md
+include src/tiberium_soul/repos/README.md
+include src/tiberium_soul/suns/README.md
+include src/tiberium_soul/tmp/README.md
 recursive-include src/tiberium_soul/cert *
 recursive-include src/tiberium_soul/global *
 recursive-include src/tiberium_soul/hooks *

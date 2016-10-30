@@ -67,9 +67,9 @@ setuptools.setup(
     ],
     package_data = {
         "tiberium_soul" : [
-            "repos/readme.md",
-            "suns/readme.md",
-            "tmp/readme.md",
+            "repos/README.md",
+            "suns/README.md",
+            "tmp/README.md",
             "cert/*",
             "global/*",
             "hooks/*",
