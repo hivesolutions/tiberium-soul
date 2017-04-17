@@ -6,7 +6,7 @@
         <title>Tiberium / {% block title %}{% endblock %}</title>
     {% endblock %}
 </head>
-<body class="ux romantic">
+<body class="ux">
     <div id="header">
         {% block header %}
             <h1>{% block name %}{% endblock %}</h1>
