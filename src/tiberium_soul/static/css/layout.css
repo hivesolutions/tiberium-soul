@@ -102,7 +102,10 @@ form.line {
     border-right: none;
     border-top: none;
     box-shadow: none;
+    -o-box-shadow: none;
+    -ms-box-shadow: none;
     -moz-box-shadow: none;
+    -khtml-box-shadow: none;
     -webkit-box-shadow: none;
     font-size: 14px;
     height: 22px;
@@ -117,6 +120,11 @@ form.line {
 .form.form-simple input.disabled {
     border-bottom: none;
     opacity: 1.0;
+    -o-opacity: 1.0;
+    -ms-opacity: 1.0;
+    -moz-opacity: 1.0;
+    -khtml-opacity: 1.0;
+    -webkit-opacity: 1.0;
 }
 
 .form.form-simple textarea {
@@ -126,6 +134,11 @@ form.line {
 .form.form-simple .button {
     border: 1px solid #e0e0e0;
     border-radius: 4px 4px 4px 4px;
+    -o-border-radius: 4px 4px 4px 4px;
+    -ms-border-radius: 4px 4px 4px 4px;
+    -moz-border-radius: 4px 4px 4px 4px;
+    -khtml-border-radius: 4px 4px 4px 4px;
+    -webkit-border-radius: 4px 4px 4px 4px;
     color: #888888;
     font-size: 12px;
     margin: 16px 0px 16px 0px;
