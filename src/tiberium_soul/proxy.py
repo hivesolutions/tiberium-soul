@@ -96,9 +96,9 @@ class ConnectionHandler(threading.Thread):
                     self.method_CONNECT()
                 elif self.method in ("OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE"):
                     self.method_others()
-        except BaseException as exception:
+        except Exception as exception:
             try: self.client.send("Problem in routing - %s" % str(exception))
-            except BaseException as exception: print >> sys.stderr, " [error] - %s" % str(exception)
+            except Exception as exception: print >> sys.stderr, " [error] - %s" % str(exception)
         else:
             if self.target: self.target.close()
         finally:
@@ -319,31 +319,32 @@ class ProxyServer(threading.Thread):
         _socket.listen(0)
         use_ssl and _socket_ssl.listen(0)
 
-        # iterates continuously, while the executing flag is set, supposed
-        # to be iterating then accepts the various incoming connections
-        # and handles it by creating a new thread handler
-        while self.executing:
-            read, _write, _error = select.select(sockets, [], [], SELECT_TIMEOUT)
-            if not read: continue
-            for read_socket in read:
-                try:
-                    connection, address = read_socket.accept()
-                    if read_socket == _socket_ssl: connection = ssl.wrap_socket(
-                        connection,
-                        server_side = True,
-                        certfile = cert_path,
-                        keyfile = key_path
-                    )
-                    _handler = handler(connection, address, timeout, self.current)
-                    _handler.start()
-                except BaseException as exception:
-                    print >> sys.stderr, " [error] - %s" % str(exception)
-
-        # closes the service sockets as no more work is meant to be processed
-        # (end of the proxy task) note that the ssl socket is only closed in
-        # case the use ssl flag is currently active
-        _socket.close()
-        use_ssl and _socket_ssl.close()
+        try:
+            # iterates continuously, while the executing flag is set, supposed
+            # to be iterating then accepts the various incoming connections
+            # and handles it by creating a new thread handler
+            while self.executing:
+                read, _write, _error = select.select(sockets, [], [], SELECT_TIMEOUT)
+                if not read: continue
+                for read_socket in read:
+                    try:
+                        connection, address = read_socket.accept()
+                        if read_socket == _socket_ssl: connection = ssl.wrap_socket(
+                            connection,
+                            server_side = True,
+                            certfile = cert_path,
+                            keyfile = key_path
+                        )
+                        _handler = handler(connection, address, timeout, self.current)
+                        _handler.start()
+                    except Exception as exception:
+                        print >> sys.stderr, " [error] - %s" % str(exception)
+        finally:
+            # closes the service sockets as no more work is meant to be processed
+            # (end of the proxy task) note that the ssl socket is only closed in
+            # case the use ssl flag is currently active
+            _socket.close()
+            use_ssl and _socket_ssl.close()
 
     def stop_server(self):
         self.executing = False
