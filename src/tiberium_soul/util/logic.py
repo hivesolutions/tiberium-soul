@@ -173,7 +173,8 @@ def get_execute_sun(name, file_path):
                 process.wait()
                 shutil.rmtree(temp_path)
                 PORTS.insert(0, port)
-            except: pass
+            except Exception:
+                pass
 
         # creates the full path to the "target" temporary
         # path to be used in the execution
