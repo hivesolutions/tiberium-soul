@@ -55,7 +55,7 @@ AGENT = "Tiberium Proxy/" + __version__
 while serving the proxy requests """
 
 HTTP_VERSION = "HTTP/1.1"
-""" The version of the http protocol to be used
+""" The version of the HTTP protocol to be used
 while serving the proxy requests """
 
 SELECT_TIMEOUT = 1.0
