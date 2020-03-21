@@ -43,7 +43,7 @@ import quorum
 
 MONGO_DATABASE = "tiberium_soul"
 """ The default database to be used for the connection with
-the mongo database """
+the MongoDB database """
 
 app = quorum.load(
     name = __name__,

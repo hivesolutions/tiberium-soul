@@ -181,7 +181,7 @@ def delete_app(id):
     suns_folder = util.get_suns_folder()
     repos_folder = util.get_repos_folder()
 
-    # retrieves the current mongo database and removes the
+    # retrieves the current MongoDB database and removes the
     # app entry contained in it
     db = quorum.get_mongo_db()
     db.apps.remove({"id" : id})

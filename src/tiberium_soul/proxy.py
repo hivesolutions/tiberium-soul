@@ -152,7 +152,7 @@ class ConnectionHandler(threading.Thread):
 
     def _resolve_target(self):
         # retrieves the reference to the storage engine
-        # consisting of a redis data source
+        # consisting of a Redis data source
         storage = quorum.get_redis()
 
         # sets the path to the target connection as the
