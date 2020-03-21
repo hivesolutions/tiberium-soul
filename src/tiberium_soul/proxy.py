@@ -244,11 +244,11 @@ class ProxyServer(threading.Thread):
 
     cert_path = None
     """ The default path to the certificate file to be used
-    for ssl based connections """
+    for SSL based connections """
 
     key_path = None
     """ The default path to the (private) key file to be used
-    for ssl based connections """
+    for SSL based connections """
 
     executing = True
     """ The flag that controls the continuous execution
@@ -286,7 +286,7 @@ class ProxyServer(threading.Thread):
         sockets = []
 
         # creates the various certificate and key file paths for
-        # the usage on the ssl based connections
+        # the usage on the SSL based connections
         base_path = os.path.dirname(__file__)
         cert_path = cert_path or os.path.join(base_path, "cert", "dummy.crt")
         key_path = key_path or os.path.join(base_path, "cert", "dummy.key")
@@ -298,7 +298,7 @@ class ProxyServer(threading.Thread):
         _socket.bind((host, port))
         sockets.append(_socket)
 
-        # in case the current connection should also use ssl a new socket
+        # in case the current connection should also use SSL a new socket
         # should be created for such connections
         if use_ssl:
             _socket_ssl = socket.socket(socket.AF_INET)
@@ -341,8 +341,8 @@ class ProxyServer(threading.Thread):
                         print >> sys.stderr, " [error] - %s" % str(exception)
         finally:
             # closes the service sockets as no more work is meant to be processed
-            # (end of the proxy task) note that the ssl socket is only closed in
-            # case the use ssl flag is currently active
+            # (end of the proxy task) note that the SSL socket is only closed in
+            # case the use SSL flag is currently active
             _socket.close()
             use_ssl and _socket_ssl.close()
 

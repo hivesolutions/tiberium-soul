@@ -54,7 +54,7 @@ related configuration for the execution of the tiberium
 soul runtime processes """
 
 PORTS = [port for port in range(5001, 5100)]
-""" The list containing the tcp ports that are currently
+""" The list containing the TCP ports that are currently
 available for the working of the soul instance """
 
 CLEANUP = False
