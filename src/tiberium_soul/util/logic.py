@@ -86,7 +86,7 @@ def get_config():
         config_path = _config_path
 
     # retrieves the path to the (target) config (configuration) file and
-    # check if it exists then opens it and loads the json configuration
+    # check if it exists then opens it and loads the JSON configuration
     # contained in it to config it in the template
     config_path = config_path or os.path.join(GLOBAL_FOLDER, "config.json")
     if not os.path.exists(config_path): raise RuntimeError("Config file does not exist")
