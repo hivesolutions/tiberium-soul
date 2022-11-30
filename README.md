@@ -1,4 +1,4 @@
-# [Tiberium Soul](http://tiberium_soul.hive.pt)
+# [Tiberium Soul](http://tiberium-soul.hive.pt)
 
 The Tiberium Soul server is the "heart" of the tiberium system it's responsible for the forwarding of the various
 HTTP related request from the client to the proper tiberium instance.
@@ -106,7 +106,7 @@ must be created in the target machine.
 
     $ adduser git
     $ passwd git
-    $ usermod -d /usr/local/lib/python2.7/dist-packages/tiberium_soul-0.1.0-py2.7.egg/repos/ git
+    $ usermod -d /usr/local/lib/python2.7/dist-packages/tiberium-soul-0.1.0-py2.7.egg/repos/ git
 
 You can then verify the user information with.
 
