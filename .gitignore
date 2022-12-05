@@ -5,4 +5,4 @@ redis.shelve*
 
 /dist
 /build
-/src/tiberium-soul.egg-info
+/src/tiberium_soul.egg-info
